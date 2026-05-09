@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence, Reorder } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { Button, cn, ProtocolAttribution } from '@/components/ui';
 import {
-  ArrowRight,
   Lock,
   Globe,
   Fingerprint,
@@ -106,9 +105,7 @@ function HeroInteractiveForms() {
     setFields(fields.map(f => f.id === id ? { ...f, question: text } : f));
   };
 
-  const updatePlaceholder = (id: string, text: string) => {
-    setFields(fields.map(f => f.id === id ? { ...f, placeholder: text } : f));
-  };
+
 
   const updateAnswer = (id: string, text: string) => {
     setFields(fields.map(f => f.id === id ? { ...f, answer: text } : f));
@@ -449,14 +446,10 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export function LandingPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       {/* Background - Pure Black/White Style */}
       <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#f0eeeb]">
         <div className="noise" />
