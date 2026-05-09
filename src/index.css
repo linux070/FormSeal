@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-elevated: #ffffff;
+  --color-bg-hover: #f1f5f9;
+  --color-bg-input: #f8fafc;
+  --color-bg-accent-dim: #ecfdf5;
+
+  --color-accent: #000000;
+  --color-accent-dim: #f4f4f5;
+  --color-accent-glow: #00000011;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+
+  --color-border-default: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+  --color-border-strong: #cbd5e1;
+
+  --color-danger: #ef4444;
+  --color-danger-dim: #fef2f2;
+  --color-warning: #f59e0b;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@layer base {
+  * {
+    @apply border-border-default;
+  }
+  
+  body {
+    @apply bg-bg-primary text-text-primary font-sans antialiased selection:bg-accent/20;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Scrollbar - Premium Light */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border-strong rounded-full hover:bg-text-muted transition-colors;
+  }
+}
+
+@layer components {
+  /* ─── Premium Glass (Refraction Logic) ─── */
+  .glass {
+    @apply backdrop-blur-xl bg-white/70 border border-black/[0.05];
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .glass-card {
+    @apply relative overflow-hidden rounded-[var(--radius-lg)] border border-black/[0.05] bg-white/80 backdrop-blur-md;
+    box-shadow: 
+      0 4px 24px -1px rgba(0, 0, 0, 0.05),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ─── Bento Grid Logic ─── */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(180px, auto);
+    gap: 1.25rem;
+  }
+
+  .bento-item-large { grid-column: span 2; grid-row: span 2; }
+  .bento-item-wide { grid-column: span 2; }
+  .bento-item-tall { grid-row: span 2; }
+
+  /* ─── Doppelrand (Double Bezel) - Light Mode ─── */
+  .doppelrand {
+    @apply relative p-[1px] bg-gradient-to-b from-black/[0.05] to-transparent rounded-[var(--radius-xl)] shadow-xl;
+  }
+  
+  .doppelrand-inner {
+    @apply bg-bg-elevated rounded-[calc(var(--radius-xl)-1px)] overflow-hidden;
+  }
+
+  /* ─── Textures ─── */
+  .noise {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ─── Animations ─── */
+  .animate-pulse-glow {
+    animation: pulse-glow 3s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.3; filter: blur(10px); }
+    50% { opacity: 0.6; filter: blur(15px); }
+  }
+
+  /* ─── Magnetic Micro-physics Base ─── */
+  .magnetic-area {
+    @apply relative cursor-none;
+  }
+
+  /* ─── TipTap Styling ─── */
+  .tiptap-editor .ProseMirror {
+    @apply min-h-[120px] outline-none px-4 py-3 text-[1rem] leading-relaxed;
+  }
+  .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+    color: rgba(0, 0, 0, 0.4);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+  .tiptap-editor .ProseMirror strong {
+    @apply font-bold;
+  }
+  .tiptap-editor .ProseMirror em {
+    @apply italic;
+  }
+  .tiptap-editor .ProseMirror ul {
+    @apply list-disc pl-6 my-2 space-y-1;
+  }
+  .tiptap-editor .ProseMirror ol {
+    @apply list-decimal pl-6 my-2 space-y-1;
+  }
+  .tiptap-editor .ProseMirror li > p {
+    @apply my-0;
+  }
+  .tiptap-editor .ProseMirror blockquote {
+    @apply border-l-[3px] border-black/20 pl-4 my-3 text-text-secondary italic;
+  }
+  .tiptap-editor .ProseMirror p {
+    @apply my-1;
+  }
+}
+
+/* Fluid Typography */
+@layer utilities {
+  .text-fluid-h1 {
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s var(--ease-out-expo) forwards;
+  }
+
+  .custom-dropdown {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    padding-right: 3.5rem;
+  }
+}
+
