@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletStore } from '@/stores/appStore';
 import { Button } from '@/components/ui';
 import {
-  CaretDown,
   Shapes,
   List,
   X,
@@ -43,8 +42,8 @@ export function Navbar() {
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-[100] transition-all duration-300',
-        isScrolled ? 'py-3' : 'py-5',
-        isScrolled ? 'bg-[#f0eeeb]/60 backdrop-blur-md' : 'bg-transparent'
+        isScrolled ? 'py-3 bg-transparent' : 'py-5 bg-transparent',
+        isScrolled && 'backdrop-blur-sm bg-white/5'
       )}
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
@@ -111,7 +110,7 @@ export function Navbar() {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="absolute top-full left-0 right-0 px-6 pt-2 lg:hidden"
           >
-            <div className="bg-[#f0eeeb] border border-black/[0.08] shadow-2xl rounded-2xl p-4 space-y-2">
+            <div className="bg-white/80 backdrop-blur-xl border border-black/[0.08] shadow-2xl rounded-2xl p-4 space-y-2">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}

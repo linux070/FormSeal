@@ -21,8 +21,10 @@ interface DashboardEntry {
   formBlobId: string;
   indexBlobId: string;
   title: string;
+  description?: string;
   createdAt: number;
   submissionCount: number;
+  isPaused?: boolean;
 }
 
 interface DashboardState {
