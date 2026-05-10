@@ -70,15 +70,12 @@ export function DashboardPage() {
         
         {/* ─── Header Section ─── */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-[0.625rem] font-bold uppercase tracking-[0.4em] text-black/30">Protocol Hub</span>
-            </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-black">
+          <div className="mb-0">
+            <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
               Dashboard
             </h1>
-            <p className="text-black/40 text-[0.875rem] font-medium max-w-xl">
-              Manage decentralized data streams, monitor Walrus blob persistence, and verify threshold-encrypted records.
+            <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
+              Manage data streams, monitor Walrus blob persistence, and verify threshold-encrypted records.
             </p>
           </div>
           <Link to="/templates">

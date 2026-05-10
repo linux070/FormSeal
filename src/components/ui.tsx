@@ -239,6 +239,7 @@ interface BadgeProps {
   children: ReactNode;
   variant?: 'default' | 'accent' | 'danger' | 'warning' | 'info';
   size?: 'sm' | 'md';
+  className?: string;
 }
 
 const badgeVariants: Record<string, string> = {
@@ -249,14 +250,15 @@ const badgeVariants: Record<string, string> = {
   info: 'bg-accent/10 text-accent border-accent/20', // Defaulting info to accent for simplicity
 };
 
-export function Badge({ children, variant = 'default', size = 'sm' }: BadgeProps) {
+export function Badge({ children, variant = 'default', size = 'sm', className = '' }: BadgeProps) {
   return (
     <span
       className={cn(
         'inline-flex items-center font-bold border rounded-lg uppercase tracking-widest transition-all duration-300',
         'shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]',
         badgeVariants[variant],
-        size === 'sm' ? 'px-2 py-0.5 text-[0.625rem]' : 'px-3 py-1 text-[0.6875rem]'
+        size === 'sm' ? 'px-2 py-0.5 text-[0.625rem]' : 'px-3 py-1 text-[0.6875rem]',
+        className
       )}
     >
       {children}

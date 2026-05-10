@@ -55,7 +55,7 @@ const TEMPLATES = [
 
 function TemplateSVGDesign({ type }: { type: string }) {
   const baseColor = "currentColor";
-  
+
   switch (type) {
     case 'bug_report':
       return (
@@ -117,7 +117,7 @@ function MiniFormPreview({ type }: { type: string }) {
         <div className="w-2 h-2 rounded-full bg-[#ffbd2e]" />
         <div className="w-2 h-2 rounded-full bg-[#27c93f]" />
       </div>
-      
+
       {/* Illustration Canvas */}
       <div className="relative w-full h-full flex items-center justify-center pb-8">
         <TemplateSVGDesign type={type} />
@@ -143,10 +143,10 @@ export function TemplatesPage() {
         template.fields.forEach((tf: any, i: number) => {
           const field = fields[i];
           if (field) {
-            store.updateField(field.id, { 
-              label: "", 
+            store.updateField(field.id, {
+              label: "",
               labelPlaceholder: tf.labelPlaceholder,
-              required: tf.required 
+              required: tf.required
             });
           }
         });
@@ -158,39 +158,36 @@ export function TemplatesPage() {
   return (
     <div className="flex-1 px-6 md:px-12 pt-36 pb-20 bg-[#fcfaf7] min-h-screen font-sans">
       <div className="max-w-[1400px] mx-auto">
-        
-        <div className="space-y-2 mb-16">
-          <div className="flex items-center gap-3">
-            <span className="text-[0.625rem] font-bold uppercase tracking-[0.4em] text-black/30">Studio Hub</span>
-          </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-black">
+
+        <div className="mb-12">
+          <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
             Templates
           </h1>
-          <p className="text-black/40 text-[0.875rem] font-medium max-w-xl">
-            Start new from our curated collection of decentralized form structures.
+          <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
+            Start new from our curated collection of form structures.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          
+
           {/* Blank Form Card */}
-          <motion.div 
+          <motion.div
             whileHover={{ y: -4 }}
             onClick={() => handleSelectTemplate(null)}
             className="group relative flex flex-col bg-white rounded-3xl border border-black/[0.04] shadow-sm hover:shadow-xl hover:shadow-black/[0.02] transition-all duration-500 overflow-hidden cursor-pointer h-[360px] items-center justify-center text-center p-12"
           >
             <div className="flex flex-col items-center justify-center gap-8 z-10">
-               <div className="flex flex-col gap-1.5">
-                  <h3 className="text-[1.25rem] font-bold text-black">Blank form</h3>
-                  <p className="text-[0.8125rem] font-medium text-black/50">Create new form from scratch</p>
-               </div>
-               
-               <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center shadow-2xl shadow-black/20 group-hover:bg-zinc-800 transition-all duration-500 group-hover:scale-105 border border-transparent">
-                  <div className="relative w-6 h-6">
-                    <div className="absolute top-1/2 left-0 w-full h-[2px] bg-white rounded-full -translate-y-1/2" />
-                    <div className="absolute top-0 left-1/2 w-[2px] h-full bg-white rounded-full -translate-x-1/2" />
-                  </div>
-               </div>
+              <div className="flex flex-col gap-1.5">
+                <h3 className="text-[1.25rem] font-bold text-black">Blank form</h3>
+                <p className="text-[0.8125rem] font-medium text-black/50">Create new form from scratch</p>
+              </div>
+
+              <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center shadow-2xl shadow-black/20 group-hover:bg-zinc-800 transition-all duration-500 group-hover:scale-105 border border-transparent">
+                <div className="relative w-6 h-6">
+                  <div className="absolute top-1/2 left-0 w-full h-[2px] bg-white rounded-full -translate-y-1/2" />
+                  <div className="absolute top-0 left-1/2 w-[2px] h-full bg-white rounded-full -translate-x-1/2" />
+                </div>
+              </div>
             </div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/[0.01] pointer-events-none" />
           </motion.div>
@@ -219,13 +216,13 @@ export function TemplatesPage() {
               <div className="flex-1 relative mt-2 ml-8 mr-0 mb-0">
                 {/* Ghost Stack Effect - Square Boxed */}
                 <div className="absolute -left-4 top-4 bottom-0 w-full bg-black/[0.01] border-t border-l border-black/[0.02] rounded-none" />
-                
+
                 <div className="h-full w-full relative z-10">
                   <MiniFormPreview type={template.id} />
                 </div>
-                
+
                 <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#f8f9fa] to-transparent pointer-events-none z-20" />
-                
+
                 <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#f1f3f5] text-black text-[0.75rem] font-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 shadow-lg z-30 border border-black/[0.05]">
                   Use Template
                 </div>

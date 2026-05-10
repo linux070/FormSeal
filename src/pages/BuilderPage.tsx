@@ -1,4 +1,4 @@
- import { useState } from 'react';
+import { useState } from 'react';
 import { useBuilderStore } from '@/stores/builderStore';
 import {
   DndContext,
@@ -14,9 +14,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { 
-  Rocket, 
-  Eye, 
+import {
+  Rocket,
+  Eye,
   Copy,
   PencilSimpleLine,
   Bug,
@@ -130,7 +130,7 @@ export function BuilderPage() {
     store.resetBuilder();
     store.setTitle(template.name);
     store.setDescription(template.description);
-    
+
     // Batch add fields
     template.fields.forEach((f: any) => {
       store.addField(f.type);
@@ -143,10 +143,10 @@ export function BuilderPage() {
       templateFields.forEach((tf: any, i: number) => {
         const field = fields[i];
         if (field) {
-          store.updateField(field.id, { 
+          store.updateField(field.id, {
             label: "", // Keep label empty so placeholder shows
             labelPlaceholder: tf.labelPlaceholder,
-            required: tf.required 
+            required: tf.required
           });
         }
       });
@@ -158,12 +158,12 @@ export function BuilderPage() {
       <div className="max-w-[1200px] mx-auto">
         {/* ─── Header ─── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 animate-fade-in">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-black">
+          <div className="mb-0">
+            <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
               Form Builder
             </h1>
-            <p className="text-black/40 text-[0.875rem] mt-1 font-medium">
-              Create and publish decentralized forms.
+            <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
+              Create and publish decentralized forms with Walrus.
             </p>
           </div>
         </div>
@@ -257,7 +257,7 @@ export function BuilderPage() {
                       className="w-full text-[2rem] font-black text-black placeholder:text-black/20 bg-transparent border-none focus:outline-none focus:ring-0 p-0 transition-all"
                     />
                   </div>
-                  
+
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-[0.625rem] font-black text-black/40 uppercase tracking-widest group-focus-within/desc:text-accent transition-colors">
                       <FileText weight="bold" className="w-3.5 h-3.5" />
@@ -364,7 +364,7 @@ export function BuilderPage() {
                   <h3 className="text-[0.625rem] font-black text-black/40 uppercase tracking-[0.2em] mb-5">
                     Settings
                   </h3>
-                  
+
                   <div className="space-y-5">
                     {/* Form Settings */}
                     <div className="space-y-4">
@@ -378,9 +378,8 @@ export function BuilderPage() {
                             <button
                               key={color}
                               onClick={() => store.setAccentColor(color)}
-                              className={`w-8 h-8 rounded-full border-2 transition-all ${
-                                store.form.accentColor === color ? 'border-black scale-110' : 'border-transparent hover:scale-105'
-                              }`}
+                              className={`w-8 h-8 rounded-full border-2 transition-all ${store.form.accentColor === color ? 'border-black scale-110' : 'border-transparent hover:scale-105'
+                                }`}
                               style={{ backgroundColor: color }}
                               aria-label={`Set accent color to ${color}`}
                             />
@@ -395,13 +394,11 @@ export function BuilderPage() {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => store.setSensitive(!store.form.sensitive)}
-                            className={`w-11 h-6 rounded-full transition-all relative ${
-                              store.form.sensitive ? 'bg-[#34d399]' : 'bg-black/10'
-                            }`}
+                            className={`w-11 h-6 rounded-full transition-all relative ${store.form.sensitive ? 'bg-[#34d399]' : 'bg-black/10'
+                              }`}
                           >
-                            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${
-                              store.form.sensitive ? 'left-6' : 'left-1'
-                            }`} />
+                            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all ${store.form.sensitive ? 'left-6' : 'left-1'
+                              }`} />
                           </button>
                           <div>
                             <div className="text-[0.75rem] font-semibold text-black">Sensitive Form</div>
@@ -427,65 +424,65 @@ export function BuilderPage() {
           </div>
         </div>
 
-      {/* ─── Preview Modal ─── */}
+        {/* ─── Preview Modal ─── */}
 
-      <Modal
-        open={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
-        title="Form Preview"
-      >
-        <div 
-          className="max-h-[75vh] overflow-y-auto pr-2 custom-scrollbar"
-          style={{ '--accent-color': store.form.accentColor } as any}
+        <Modal
+          open={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          title="Form Preview"
         >
-          <div className="space-y-6">
-            <div className="pb-4">
-              <h2 className="text-2xl font-black text-black tracking-tight mb-1">
-                {store.form.title || 'Untitled Form'}
-              </h2>
-              <p className="text-[0.875rem] text-black/50 leading-relaxed">
-                {store.form.description || 'No description provided.'}
-              </p>
-            </div>
-
+          <div
+            className="max-h-[75vh] overflow-y-auto pr-2 custom-scrollbar"
+            style={{ '--accent-color': store.form.accentColor } as any}
+          >
             <div className="space-y-6">
-              {store.form.fields.length > 0 ? (
-                store.form.fields.map((field) => (
-                  <FormFieldRenderer
-                    key={field.id}
-                    field={field}
-                    value={previewValues[field.id] ?? null}
-                    onChange={(val) => setPreviewValues(prev => ({ ...prev, [field.id]: val }))}
-                    accentColor={store.form.accentColor}
-                  />
-                ))
-              ) : (
-                <div className="py-8 text-center bg-black/[0.02] rounded-2xl border border-dashed border-black/10">
-                  <p className="text-[0.75rem] font-bold text-black/20">
-                    No fields added to this form yet.
-                  </p>
-                </div>
-              )}
-            </div>
+              <div className="pb-4">
+                <h2 className="text-2xl font-black text-black tracking-tight mb-1">
+                  {store.form.title || 'Untitled Form'}
+                </h2>
+                <p className="text-[0.875rem] text-black/50 leading-relaxed">
+                  {store.form.description || 'No description provided.'}
+                </p>
+              </div>
 
-            <div className="pt-4 mt-2 border-t border-black/[0.05]">
-              <Button
-                variant="primary"
-                className="w-full h-12 !rounded-xl !text-white !text-[0.9375rem] shadow-lg border-none"
-                style={{ backgroundColor: store.form.accentColor }}
-                onClick={() => {
-                  alert('This is a preview. Submissions are disabled.');
-                }}
-              >
-                Submit Response
-              </Button>
-              <p className="text-center text-[0.6875rem] text-black/40 mt-3 font-medium">
-                Your responses are secured using threshold cryptography.
-              </p>
+              <div className="space-y-6">
+                {store.form.fields.length > 0 ? (
+                  store.form.fields.map((field) => (
+                    <FormFieldRenderer
+                      key={field.id}
+                      field={field}
+                      value={previewValues[field.id] ?? null}
+                      onChange={(val) => setPreviewValues(prev => ({ ...prev, [field.id]: val }))}
+                      accentColor={store.form.accentColor}
+                    />
+                  ))
+                ) : (
+                  <div className="py-8 text-center bg-black/[0.02] rounded-2xl border border-dashed border-black/10">
+                    <p className="text-[0.75rem] font-bold text-black/20">
+                      No fields added to this form yet.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 mt-2 border-t border-black/[0.05]">
+                <Button
+                  variant="primary"
+                  className="w-full h-12 !rounded-xl !text-white !text-[0.9375rem] shadow-lg border-none"
+                  style={{ backgroundColor: store.form.accentColor }}
+                  onClick={() => {
+                    alert('This is a preview. Submissions are disabled.');
+                  }}
+                >
+                  Submit Response
+                </Button>
+                <p className="text-center text-[0.6875rem] text-black/40 mt-3 font-medium">
+                  Your responses are secured using threshold cryptography.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
       </div>
     </div>
   );
