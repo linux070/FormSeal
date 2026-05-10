@@ -72,13 +72,12 @@ export function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <div className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-              <span className="text-[0.625rem] font-bold uppercase tracking-[0.4em] text-black/30">Protocol Archive</span>
+              <span className="text-[0.625rem] font-bold uppercase tracking-[0.4em] text-black/30">Protocol Hub</span>
             </div>
-            <h1 className="text-[2.5rem] font-bold text-black tracking-tighter leading-none">
-              Collection Inventory
+            <h1 className="text-3xl font-extrabold tracking-tight text-black">
+              Dashboard
             </h1>
-            <p className="text-black/40 font-medium max-w-xl">
+            <p className="text-black/40 text-[0.875rem] font-medium max-w-xl">
               Manage decentralized data streams, monitor Walrus blob persistence, and verify threshold-encrypted records.
             </p>
           </div>

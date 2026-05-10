@@ -159,10 +159,16 @@ export function TemplatesPage() {
     <div className="flex-1 px-6 md:px-12 pt-36 pb-20 bg-[#fcfaf7] min-h-screen font-sans">
       <div className="max-w-[1400px] mx-auto">
         
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-          <h1 className="text-[1.25rem] font-bold text-black/80">
-            Start new from
+        <div className="space-y-2 mb-16">
+          <div className="flex items-center gap-3">
+            <span className="text-[0.625rem] font-bold uppercase tracking-[0.4em] text-black/30">Studio Hub</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-black">
+            Templates
           </h1>
+          <p className="text-black/40 text-[0.875rem] font-medium max-w-xl">
+            Start new from our curated collection of decentralized form structures.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
