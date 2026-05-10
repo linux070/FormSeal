@@ -5,6 +5,7 @@ import { LandingPage } from '@/pages/LandingPage';
 import { BuilderPage } from '@/pages/BuilderPage';
 import { FormViewPage } from '@/pages/FormViewPage';
 import { DashboardPage } from '@/pages/DashboardPage';
+import { TemplatesPage } from '@/pages/TemplatesPage';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/builder" element={<BuilderPage />} />
           <Route path="/f/:blobId" element={<FormViewPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/templates" element={<TemplatesPage />} />
         </Routes>
         <ToastContainer />
       </div>

@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { fetchFromWalrus, uploadToWalrus, getExplorerUrl } from '@/lib/walrus';
 import { sealEncrypt } from '@/lib/seal';
 import { useToastStore } from '@/stores/appStore';
-import { Button, Skeleton, Badge, ProtocolAttribution } from '@/components/ui';
+import { Button, Skeleton, Badge } from '@/components/ui';
 import { FormFieldRenderer } from '@/components/FormFieldRenderer';
 import type { FormSchema, FormIndex, FieldSubmission, FormSubmission } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -244,57 +244,58 @@ export function FormViewPage() {
   // ─── Success State ───
   if (pageState === 'success' && submittedBlobId) {
     return (
-      <div className="flex-1 flex items-center justify-center px-4 py-20">
-        <div className="w-full max-w-md text-center animate-fade-in-scale">
-          <div className="doppelrand">
-            <div className="doppelrand-inner p-8 md:p-10">
-              <div className="w-16 h-16 rounded-full bg-accent-dim border border-accent/20 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle weight="fill" className="w-8 h-8 text-accent" />
-              </div>
-              <h2 className="text-xl font-bold mb-2">Submission Stored</h2>
-              <p className="text-text-muted text-[1rem] mb-6">
-                Your response has been permanently stored on the Walrus decentralized storage network.
-              </p>
-
-              {/* Blob ID Display */}
-              <div className="bg-bg-input rounded-[var(--radius-lg)] border border-border-subtle p-4 mb-6">
-                <div className="text-[0.6875rem] uppercase tracking-wider text-text-muted font-semibold mb-2">
-                  Walrus Blob ID
-                </div>
-                <p className="font-mono text-[1rem] text-text-secondary break-all leading-relaxed">
-                  {submittedBlobId}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <a
-                  href={getExplorerUrl(submittedBlobId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button
-                    variant="primary"
-                    size="md"
-                    icon={<ArrowSquareOut weight="bold" className="w-4 h-4" />}
-                    className="w-full"
-                  >
-                    View on Walrus Explorer
-                  </Button>
-                </a>
-                <Link to="/">
-                  <Button variant="ghost" size="md" className="w-full">
-                    Back to FormSeal
-                  </Button>
-                </Link>
-              </div>
-
-              {schema?.sensitive && (
-                <div className="mt-6 flex items-center justify-center gap-2 text-[0.75rem] text-accent">
-                  <Lock weight="fill" className="w-3.5 h-3.5" />
-                  Encrypted with Seal before storage
-                </div>
-              )}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-20 bg-[#fcfaf7] min-h-screen relative overflow-hidden">
+        {/* Subtle decorative background element */}
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-black/[0.02] rounded-full blur-[100px]" />
+        
+        <div className="max-w-[480px] w-full text-center relative z-10 animate-fade-in">
+          <div className="bg-white rounded-[3rem] border border-black/[0.04] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] p-12">
+            <div className="w-20 h-20 rounded-[2rem] bg-[#faf9f6] border border-black/[0.03] flex items-center justify-center mx-auto mb-8 shadow-sm">
+              <CheckCircle weight="light" className="w-10 h-10 text-emerald-500" />
             </div>
+            <h2 className="text-[2.25rem] font-bold tracking-tight text-black mb-4">Transmission Success</h2>
+            <p className="text-[1rem] text-black/40 font-medium mb-10 leading-relaxed px-4">
+              Your data has been permanently integrated into the decentralized storage fabric.
+            </p>
+
+            {/* Blob ID Display */}
+            <div className="bg-[#faf9f6] rounded-[2rem] border border-black/[0.03] p-8 mb-10 text-left">
+              <div className="text-[0.75rem] uppercase tracking-widest text-black/20 font-bold mb-3">
+                Network Identifier
+              </div>
+              <p className="font-mono text-[0.875rem] text-black/60 break-all leading-relaxed font-medium">
+                {submittedBlobId}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <a
+                href={getExplorerUrl(submittedBlobId)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  variant="primary"
+                  size="lg"
+                  icon={<ArrowSquareOut weight="light" className="w-5 h-5" />}
+                  className="w-full h-16 !rounded-2xl !bg-black !text-white shadow-xl shadow-black/10"
+                >
+                  Inspect Object
+                </Button>
+              </a>
+              <Link to="/">
+                <button className="text-[0.875rem] font-bold text-black/30 hover:text-black transition-colors py-2">
+                  Return to Studio
+                </button>
+              </Link>
+            </div>
+
+            {schema?.sensitive && (
+              <div className="mt-8 pt-8 border-t border-black/[0.03] flex items-center justify-center gap-3 text-[0.75rem] text-black/20 font-bold uppercase tracking-widest">
+                <Lock weight="fill" className="w-3.5 h-3.5" />
+                Threshold Encrypted
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -305,39 +306,39 @@ export function FormViewPage() {
   if (!schema) return null;
 
   return (
-    <div className="flex-1 px-4 pt-28 pb-20">
-      <div className="max-w-2xl mx-auto">
-        <div className="animate-fade-in">
+    <div className="flex-1 px-4 pt-32 pb-20 bg-[#fcfaf7] min-h-screen">
+      <div className="max-w-3xl mx-auto">
+        <div className="animate-fade-in space-y-8">
           
-          <div className="doppelrand">
-            <div className="doppelrand-inner bg-white p-0 overflow-hidden shadow-2xl">
+          <div className="bg-white rounded-[3rem] border border-black/[0.04] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] overflow-hidden">
+            <div className="bg-white p-0 overflow-hidden">
               
               {/* Form Header Area */}
-              <div className="p-8 md:p-12 border-b border-black/[0.03] bg-black/[0.01]">
-                <div className="flex items-center gap-2 mb-6">
+              <div className="p-10 md:p-16 border-b border-black/[0.03] bg-[#faf9f6]/50">
+                <div className="flex items-center gap-3 mb-8">
                   {schema.sensitive && (
-                    <Badge variant="accent">
-                      <Lock weight="fill" className="w-3.5 h-3.5 mr-1.5" />
-                      Encrypted Submission
+                    <Badge variant="accent" className="!bg-emerald-50 !text-emerald-600 !border-emerald-100/50">
+                      <Lock weight="fill" className="w-3.5 h-3.5 mr-2" />
+                      Encrypted Stream
                     </Badge>
                   )}
-                  <Badge variant="default">Walrus Decentralized</Badge>
+                  <Badge variant="default" className="!bg-black/[0.03] !text-black/40 !border-black/5">Verified Collection</Badge>
                 </div>
                 
-                <h1 className="text-3xl md:text-4xl font-black tracking-tight text-text-primary mb-3">
-                  {schema.title || 'Untitled Form'}
+                <h1 className="text-[2.75rem] font-bold tracking-tight text-black leading-tight mb-4">
+                  {schema.title || 'Untitled Stream'}
                 </h1>
                 
                 {schema.description && (
-                  <p className="text-[1rem] text-text-secondary leading-relaxed max-w-[55ch]">
+                  <p className="text-[1.125rem] text-black/50 leading-relaxed max-w-[50ch] font-medium">
                     {schema.description}
                   </p>
                 )}
               </div>
 
               {/* Form Body Area */}
-              <div className="p-8 md:p-12">
-                <div className="space-y-10 field-stagger">
+              <div className="p-10 md:p-16">
+                <div className="space-y-12 field-stagger">
                   {schema.fields.map((field) => (
                     <FormFieldRenderer
                       key={field.id}
@@ -353,24 +354,24 @@ export function FormViewPage() {
                 </div>
 
                 {/* Submit Section */}
-                <div className="mt-12 pt-10 border-t border-black/[0.03]">
+                <div className="mt-16 pt-12 border-t border-black/[0.03]">
                   <Button
                     variant="primary"
                     size="lg"
                     onClick={handleSubmit}
                     loading={pageState === 'submitting'}
-                    className="w-full h-14 !rounded-2xl text-[1.125rem] font-bold shadow-xl shadow-accent/20 transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-16 !rounded-2xl text-[1.125rem] font-bold shadow-2xl shadow-black/10 transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
                     style={{
                       backgroundColor: schema.accentColor,
                     }}
                   >
-                    {pageState === 'submitting' ? 'Uploading to Walrus...' : 'Submit Response'}
+                    {pageState === 'submitting' ? 'Synchronizing with Network...' : 'Confirm Submission'}
                   </Button>
                   
-                  <div className="mt-8 flex items-center justify-center gap-3 text-[0.75rem] text-text-muted font-bold uppercase tracking-widest opacity-40">
-                    <div className="w-8 h-px bg-current" />
-                    Powered by FormSeal
-                    <div className="w-8 h-px bg-current" />
+                  <div className="mt-12 text-center">
+                    <span className="text-[0.6875rem] font-bold text-black/10 uppercase tracking-[0.4em]">
+                      End of Stream Architecture
+                    </span>
                   </div>
                 </div>
               </div>
@@ -379,7 +380,7 @@ export function FormViewPage() {
           </div>
         </div>
 
-        <ProtocolAttribution />
+
       </div>
     </div>
   );

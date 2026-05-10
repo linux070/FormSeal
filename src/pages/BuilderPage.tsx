@@ -34,7 +34,7 @@ import {
   Envelope,
   Globe,
 } from '@phosphor-icons/react';
-import { Button, Modal, ProtocolAttribution } from '@/components/ui';
+import { Button, Modal } from '@/components/ui';
 import { BuilderFieldCard } from '@/components/BuilderFieldCard';
 import { FormFieldRenderer } from '@/components/FormFieldRenderer';
 import { uploadToWalrus } from '@/lib/walrus';
@@ -163,7 +163,7 @@ export function BuilderPage() {
               Form Builder
             </h1>
             <p className="text-black/40 text-[0.875rem] mt-1 font-medium">
-              Create and publish decentralized forms to Walrus.
+              Create and publish decentralized forms.
             </p>
           </div>
         </div>
@@ -427,8 +427,6 @@ export function BuilderPage() {
           </div>
         </div>
 
-        <ProtocolAttribution />
-      </div>
       {/* ─── Preview Modal ─── */}
 
       <Modal
@@ -488,6 +486,7 @@ export function BuilderPage() {
           </div>
         </div>
       </Modal>
+      </div>
     </div>
   );
 }

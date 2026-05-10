@@ -17,14 +17,14 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const NAV_LINKS = [
-  { label: 'Template', path: '/builder' },
-  { label: 'Form', path: '/builder' },
+  { label: 'Templates', path: '/templates' },
+  { label: 'Form Builder', path: '/builder' },
   { label: 'Dashboard', path: '/dashboard' },
 ];
 
 export function Navbar() {
   const location = useLocation();
-  const { address, connect, disconnect, isConnecting } = useWalletStore();
+  const { connect, isConnecting } = useWalletStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,14 +39,12 @@ export function Navbar() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const isLandingPage = location.pathname === '/';
-
   return (
     <header
       className={cn(
         'fixed top-0 left-0 right-0 z-[100] transition-all duration-300',
         isScrolled ? 'py-3' : 'py-5',
-        isScrolled && !isLandingPage ? 'bg-[#f0eeeb]/60 backdrop-blur-md' : 'bg-transparent'
+        isScrolled ? 'bg-[#f0eeeb]/60 backdrop-blur-md' : 'bg-transparent'
       )}
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
@@ -64,13 +62,10 @@ export function Navbar() {
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
-                to={link.path || '#'}
+                to={link.path}
                 className="flex items-center gap-1.5 text-[0.9375rem] font-medium text-black/60 hover:text-black transition-colors"
               >
                 {link.label}
-                {link.hasDropdown && (
-                  <CaretDown weight="bold" className="w-3 h-3 opacity-40" />
-                )}
               </Link>
             ))}
           </div>
@@ -98,7 +93,7 @@ export function Navbar() {
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-xl bg-black/[0.04] flex items-center justify-center text-text-primary"
+              className="lg:hidden w-10 h-10 rounded-xl bg-black/[0.04] flex items-center justify-center text-black"
             >
               {mobileMenuOpen ? <X weight="bold" /> : <List weight="bold" />}
             </button>
@@ -120,16 +115,15 @@ export function Navbar() {
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
-                  to={link.path || '#'}
-                  className="flex items-center justify-between p-4 rounded-xl text-lg font-bold text-text-secondary hover:bg-black/[0.04] transition-all"
+                  to={link.path}
+                  className="flex items-center justify-between p-4 rounded-xl text-lg font-bold text-black/60 hover:text-black hover:bg-black/[0.04] transition-all"
                 >
                   {link.label}
-                  {link.hasDropdown && <CaretDown weight="bold" className="w-4 h-4 opacity-40" />}
                 </Link>
               ))}
               <div className="pt-4 border-t border-black/[0.05] grid grid-cols-2 gap-4">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   onClick={connect}
                   className="w-full rounded-xl"
                 >
