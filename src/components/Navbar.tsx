@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useWalletStore } from '@/stores/appStore';
 import { Button } from '@/components/ui';
 import {
-  Shapes,
   List,
   X,
 } from '@phosphor-icons/react';
@@ -49,11 +48,12 @@ export function Navbar() {
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         <nav className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <Shapes weight="fill" className="w-6 h-6 text-black transition-transform duration-500 group-hover:rotate-[10deg]" />
-            <span className="text-[1.25rem] font-bold tracking-tight text-black">
-              FormSeal
-            </span>
+          <Link to="/" className="flex items-center group">
+            <img 
+              src="/formseal kit/formseal_header.svg" 
+              alt="FormSeal" 
+              className="h-12 w-auto" 
+            />
           </Link>
 
           {/* Desktop Links */}
@@ -71,14 +71,14 @@ export function Navbar() {
 
           {/* Actions */}
           <div className="flex items-center gap-8">
-            <Link 
-              to="#" 
+            <Link
+              to="#"
               onClick={connect}
               className="hidden sm:block text-[0.9375rem] font-bold text-black/80 hover:text-black transition-colors"
             >
               Log in
             </Link>
-            
+
             <Button
               variant="primary"
               size="sm"

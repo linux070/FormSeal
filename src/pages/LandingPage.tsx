@@ -7,7 +7,6 @@ import {
   Globe,
   Fingerprint,
   HardDrive,
-  Shapes,
   Plus,
   Trash,
   DotsSixVertical,
@@ -216,7 +215,7 @@ function HeroInteractiveForms() {
                     className="text-[1.125rem] font-semibold text-black tracking-tight w-full bg-transparent border-none focus:outline-none placeholder:text-black/10"
                     placeholder="Enter question..."
                   />
-                  
+
                   {field.type === 'multiple' && field.choices && (
                     <div className="space-y-2">
                       <Reorder.Group
@@ -289,7 +288,7 @@ function HeroInteractiveForms() {
 
                   {field.type === 'dropdown' && field.choices && (
                     <div className="space-y-4">
-                      <HeroDropdownPreview 
+                      <HeroDropdownPreview
                         choices={field.choices}
                         onToggle={(choiceId) => toggleChoice(field.id, choiceId)}
                         onUpdateText={(choiceId, text) => updateChoiceText(field.id, choiceId, text)}
@@ -325,15 +324,19 @@ function HeroInteractiveForms() {
             className="flex flex-col items-center justify-center py-24 border-2 border-dashed border-black/5 rounded-[2.5rem] bg-black/[0.01]"
           >
             <div className="w-16 h-16 rounded-3xl bg-white border border-black/5 flex items-center justify-center mb-8 shadow-sm">
-              <Shapes weight="bold" className="w-8 h-8 text-black/10" />
+              <img 
+                src="/formseal kit/formseal_logo.svg" 
+                alt="FormSeal" 
+                className="w-10 h-10 opacity-20" 
+              />
             </div>
-            
+
             <div className="text-center mb-10">
               <h3 className="text-[1.125rem] font-black text-black/40 tracking-tight">Workspace Empty</h3>
               <p className="text-[0.75rem] font-bold text-black/20 mt-1">Add a field to begin interacting.</p>
             </div>
 
-            <button 
+            <button
               onClick={addTemplates}
               className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-white border border-black/5 shadow-sm text-[0.9375rem] font-semibold text-black/60 hover:text-black hover:scale-105 hover:shadow-xl hover:border-black/10 active:scale-95 transition-all duration-300"
             >
@@ -347,13 +350,13 @@ function HeroInteractiveForms() {
   );
 }
 
-function HeroDropdownPreview({ 
-  choices, 
-  onToggle, 
-  onUpdateText, 
-  onDelete, 
-  onAdd 
-}: { 
+function HeroDropdownPreview({
+  choices,
+  onToggle,
+  onUpdateText,
+  onDelete,
+  onAdd
+}: {
   choices: { id: string; text: string; checked: boolean }[];
   onToggle: (id: string) => void;
   onUpdateText: (id: string, text: string) => void;
@@ -414,7 +417,7 @@ function HeroDropdownPreview({
       </div>
 
       {/* The Selector (The trigger) */}
-      <div 
+      <div
         className="w-full px-5 h-[54px] bg-black/[0.01] border border-black/5 rounded-xl flex items-center justify-between opacity-50 cursor-not-allowed"
       >
         <div className="flex items-center gap-3">
@@ -593,11 +596,12 @@ export function LandingPage() {
       {/* ─── Footer ─── */}
       <footer className="px-6 md:px-12 lg:px-20 py-16 border-t border-black/[0.03]">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-black/[0.03] border border-black/[0.05] flex items-center justify-center">
-              <Shapes weight="fill" className="w-5 h-5 text-black/40" />
-            </div>
-            <span className="text-lg font-black tracking-tighter text-black uppercase italic">FormSeal</span>
+          <div className="flex items-center">
+            <img 
+              src="/formseal kit/formseal_header.svg" 
+              alt="FormSeal" 
+              className="h-12 w-auto" 
+            />
           </div>
           <div className="flex items-center gap-10 text-[0.75rem] font-black uppercase tracking-[0.2em] text-text-muted">
             <a href="#" className="hover:text-black transition-colors">X / Twitter</a>
