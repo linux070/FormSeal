@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { ToastContainer } from '@/components/ToastContainer';
 import { LandingPage } from '@/pages/LandingPage';
@@ -8,12 +8,9 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { TemplatesPage } from '@/pages/TemplatesPage';
 
 function AppContent() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/dashboard');
-
   return (
     <div className="min-h-[100dvh] flex flex-col relative">
-      {!isAdminRoute && <Navbar />}
+      <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/builder" element={<BuilderPage />} />
