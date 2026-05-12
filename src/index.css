@@ -128,43 +128,52 @@
 /* --- Admin Layout --- */
 .admin-layout {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
   padding-top: 88px; /* For fixed main navbar height */
 }
 
 .admin-sidebar {
-  width: 280px;
-  background: var(--surface2);
-  border-right: 1px solid var(--border);
-  position: fixed;
-  left: 0;
-  top: 88px;
-  bottom: 0;
-  z-index: 90;
+  width: 100%;
+  background: transparent;
+  position: static;
   display: flex;
-  flex-direction: column;
-  padding: 48px 24px; /* Increased padding to align with Navbar logo gutter */
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 24px;
+  overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    padding: 20px 48px;
+    gap: 12px;
+  }
 }
 
 .sidebar-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-secondary);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  margin-bottom: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .sidebar-btn:hover {
   background: rgba(0,0,0,0.04);
   color: var(--text-primary);
-  transform: translateX(2px);
+  transform: translateY(-1px);
 }
 
 .sidebar-btn.active {
@@ -174,10 +183,10 @@
 
 .admin-main {
   flex: 1;
-  margin-left: 280px;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 100%;
 }
 
 .admin-topbar {
@@ -194,8 +203,15 @@
 }
 
 .content-area {
-  padding: 32px;
+  padding: 32px 24px;
   flex: 1;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .content-area {
+    padding: 40px 48px;
+  }
 }
 
 /* --- Components --- */

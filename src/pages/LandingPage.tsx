@@ -21,25 +21,31 @@ import {
 const BENTO_FEATURES = [
   {
     title: 'Walrus Permanent Storage',
-    description: 'Forms are stored as immutable artifacts on the Walrus decentralized network. No servers, no deletions, no limits.',
+    description: 'Forms are stored as immutable artifacts on the Walrus decentralized network. No servers, no central databases, no risk of data loss or arbitrary deletion.',
     icon: HardDrive,
-    className: 'lg:col-span-2 lg:row-span-2',
+    tag: 'Immutable Storage',
+    num: '01',
   },
   {
     title: 'Seal Cryptography',
-    description: 'End-to-end encryption via Seal SDK. Your data is protected by threshold cryptography.',
+    description: 'End-to-end encryption integrated natively via the Seal SDK. Your respondent submissions are safeguarded by advanced threshold encryption before leaving the browser.',
     icon: Lock,
+    tag: 'Threshold Encryption',
+    num: '02',
   },
   {
     title: 'Sui-Native Identity',
-    description: 'Your wallet is your admin key. Permissionless ownership of every form you architect.',
+    description: 'Your Web3 wallet functions as your un-phishable admin credentials. Retain absolute permissionless ownership and access control over every form you deploy.',
     icon: Fingerprint,
+    tag: 'Self-Sovereign Auth',
+    num: '03',
   },
   {
     title: 'Zero-Infra Deployment',
-    description: 'Deploy globally in one click. Direct protocol-level storage with verifiable integrity.',
+    description: 'Publish forms instantly to the global decentralized web with a single interaction. Direct protocol-level object mapping guaranteeing permanent verifiable uptime.',
     icon: Globe,
-    className: 'lg:col-span-2',
+    tag: 'Protocol Routing',
+    num: '04',
   },
 ];
 
@@ -55,25 +61,7 @@ type HeroField = {
 };
 
 function HeroInteractiveForms() {
-  const [fields, setFields] = useState<HeroField[]>([
-    {
-      id: 'f1',
-      type: 'multiple',
-      question: 'How did you find out about FormSeal?',
-      choices: [
-        { id: 'c1', text: 'Twitter', checked: false },
-        { id: 'c2', text: 'Instagram', checked: true },
-        { id: 'c3', text: 'Telegram', checked: false },
-      ],
-    },
-    {
-      id: 'f2',
-      type: 'open',
-      question: 'What is your occupation?',
-      placeholder: 'Developer',
-      answer: '',
-    },
-  ]);
+  const [fields, setFields] = useState<HeroField[]>([]);
 
   const addTemplates = () => {
     const f1: HeroField = {
@@ -515,17 +503,20 @@ export function LandingPage() {
 
 
 
-      {/* ─── Bento Features ─── */}
-      <section className="px-6 md:px-12 lg:px-20 py-40 bg-transparent relative border-t border-black/[0.03]">
+      {/* ─── Protocol Primitives Grid ─── */}
+      <section className="px-6 md:px-12 lg:px-20 py-32 bg-transparent relative border-t border-black/[0.03]">
         <div className="max-w-[1400px] mx-auto">
-          <div className="mb-24 text-center">
+          <div className="mb-20 text-center">
             <SectionLabel>Protocol Primitives</SectionLabel>
-            <h2 className="text-[clamp(2rem,5vw,3rem)] font-black text-black tracking-tight leading-[1.1]">
+            <h2 className="text-[clamp(2rem,5vw,3rem)] font-black text-black tracking-tight leading-[1.1] max-w-2xl mx-auto">
               Sovereignty as a Service.
             </h2>
+            <p className="text-text-secondary text-[1.125rem] mt-4 max-w-xl mx-auto font-medium">
+              Enterprise-grade form primitives architected for maximum absolute persistence, transparent routing, and native user agency.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {BENTO_FEATURES.map((f, i) => {
               const Icon = f.icon;
 
@@ -536,22 +527,38 @@ export function LandingPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                   viewport={{ once: true }}
-                  className={cn(
-                    "doppelrand group hover:scale-[1.02] transition-all duration-700",
-                    f.className
-                  )}
+                  className="doppelrand group hover:scale-[1.01] transition-all duration-500"
                 >
-                  <div className="doppelrand-inner bg-white p-10 flex flex-col h-full min-h-[300px]">
-                    <div className="w-14 h-14 rounded-2xl bg-black/[0.02] border border-black/[0.05] flex items-center justify-center mb-10 group-hover:bg-black group-hover:border-black/20 transition-all duration-500">
-                      <Icon weight="bold" className="w-7 h-7 text-black/40 group-hover:text-white transition-colors" />
-                    </div>
-                    <div className="mt-auto">
-                      <h3 className="text-[1.25rem] font-black text-black mb-4 tracking-tight">
+                  <div className="doppelrand-inner bg-white p-8 md:p-10 flex flex-col h-full justify-between min-h-[280px]">
+                    <div>
+                      {/* Top Bar: Icon + Primitive Index */}
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="w-14 h-14 rounded-2xl bg-black/[0.02] border border-black/[0.05] flex items-center justify-center group-hover:bg-black group-hover:border-black/20 transition-all duration-300 shadow-sm">
+                          <Icon weight="bold" className="w-7 h-7 text-black/40 group-hover:text-white transition-colors" />
+                        </div>
+                        <span className="text-[0.75rem] font-mono font-bold text-text-tertiary tracking-widest px-3 py-1 rounded-full bg-black/[0.02] border border-black/[0.04]">
+                          PRIMITIVE // {f.num}
+                        </span>
+                      </div>
+
+                      {/* Core Content */}
+                      <h3 className="text-[1.375rem] font-extrabold text-black mb-3 tracking-tight group-hover:text-black transition-colors">
                         {f.title}
                       </h3>
-                      <p className="text-text-secondary text-[1rem] leading-relaxed max-w-[32ch]">
+                      <p className="text-text-secondary text-[1.05rem] leading-relaxed font-medium">
                         {f.description}
                       </p>
+                    </div>
+
+                    {/* Interactive Footer Indicator */}
+                    <div className="mt-8 pt-5 border-t border-black/[0.04] flex items-center justify-between">
+                      <span className="flex items-center gap-2 text-[0.8125rem] font-bold text-text-muted">
+                        <span className="w-2 h-2 rounded-full bg-black/20 group-hover:bg-black transition-colors" />
+                        {f.tag}
+                      </span>
+                      <span className="text-[0.8125rem] font-bold text-black/0 group-hover:text-black transition-all transform translate-x-[-4px] group-hover:translate-x-0 inline-flex items-center gap-1">
+                        Active Layer →
+                      </span>
                     </div>
                   </div>
                 </motion.div>

@@ -6,6 +6,7 @@ import {
   Export, 
   MagnifyingGlass, 
   Check, 
+  CheckSquare,
   X, 
   ArrowUp, 
   ArrowRight, 
@@ -27,18 +28,186 @@ import {
 
 // --- Mock Data ---
 const SUBMISSIONS = [
-  { id: 1, name: "Alex Rivera", email: "alex@example.com", form: "Contact Forms", status: "new", priority: "high", time: "2m ago", note: "Urgent: mentioned SLA breach", content: "Hi, we need to discuss our enterprise contract renewal urgently. Please contact me ASAP." },
-  { id: 2, name: "Priya Sharma", email: "priya@designco.io", form: "Feedback Survey", status: "reviewed", priority: "medium", time: "14m ago", note: "", content: "The new form builder UI is fantastic. Would love to see conditional logic features." },
-  { id: 3, name: "Marcus T.", email: "marcus@startupxyz.com", form: "Demo Requests", status: "pending", priority: "high", time: "31m ago", note: "Follow up needed", content: "Interested in FormSeal for our compliance workflow. Need demo ASAP, team decision this week." },
-  { id: 4, name: "Linh Nguyen", email: "linh@techwave.vn", form: "Contact Forms", status: "new", priority: "low", time: "1h ago", note: "", content: "Could you provide documentation on the Walrus blob persistence feature?" },
-  { id: 5, name: "Carlos Mendez", email: "carlos@blockflow.co", form: "Feedback Survey", status: "resolved", priority: "low", time: "2h ago", note: "Resolved", content: "Bug report: form validation on mobile seems off for email fields." },
-  { id: 6, name: "Sophie Wen", email: "sophie@uxlab.design", form: "Demo Requests", status: "new", priority: "medium", time: "3h ago", note: "", content: "We run design workshops and would love a FormSeal integration. Can we schedule a call?" },
-  { id: 7, name: "Omar Hassan", email: "omar@databridge.io", form: "Contact Forms", status: "reviewed", priority: "high", time: "4h ago", note: "Enterprise lead!", content: "Inquiring about FormSeal for our data infrastructure. 500+ users, need SSO." },
-  { id: 8, name: "Tamara Johnson", email: "tamara@cloudnine.us", form: "Feedback Survey", status: "pending", priority: "medium", time: "5h ago", note: "", content: "Love the product! One request: dark mode for the form embed?" },
-  { id: 9, name: "Yuki Tanaka", email: "yuki@forgesync.jp", form: "Demo Requests", status: "new", priority: "low", time: "6h ago", note: "", content: "Looking for a form solution that supports Japanese characters fully." },
-  { id: 10, name: "Dev Patel", email: "dev@launchpad.in", form: "Contact Forms", status: "new", priority: "medium", time: "7h ago", note: "", content: "How does FormSeal handle GDPR compliance for European submissions?" },
-  { id: 11, name: "Nina Kovac", email: "nina@eurotech.eu", form: "Feedback Survey", status: "reviewed", priority: "low", time: "8h ago", note: "", content: "The analytics dashboard could use more granular date range selection." },
-  { id: 12, name: "James O'Brien", email: "james@irishsaas.ie", form: "Demo Requests", status: "pending", priority: "medium", time: "10h ago", note: "Scheduled call", content: "We need a demo for our sales team. 3 decision-makers involved." },
+  { 
+    id: 1, 
+    name: "Alex Rivera", 
+    email: "alex@example.com", 
+    form: "Contact Forms", 
+    status: "new", 
+    priority: "high", 
+    time: "2m ago", 
+    note: "Urgent: mentioned SLA breach", 
+    content: "Hi, we need to discuss our enterprise contract renewal urgently. Please contact me ASAP.",
+    blobId: "oehkoh0352bRGNPjuwcy0nye3OLKT649K62imdNAlXg",
+    suiObjectId: "0x1c086e216c4d35bf4c1ea493aea701260ffa5b0070622b17271e4495a030fe83",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 2, 
+    name: "Priya Sharma", 
+    email: "priya@designco.io", 
+    form: "Feedback Survey", 
+    status: "reviewed", 
+    priority: "medium", 
+    time: "14m ago", 
+    note: "", 
+    content: "The new form builder UI is fantastic. Would love to see conditional logic features.",
+    blobId: "bnpkuwcy0nye3OLKT649K62imdNAlXgoehkoh0352bR",
+    suiObjectId: "0x2b17271e4495a030fe831c086e216c4d35bf4c1ea493aea701260ffa5b007062",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 3, 
+    name: "Marcus T.", 
+    email: "marcus@startupxyz.com", 
+    form: "Demo Requests", 
+    status: "pending", 
+    priority: "high", 
+    time: "31m ago", 
+    note: "Follow up needed", 
+    content: "Interested in FormSeal for our compliance workflow. Need demo ASAP, team decision this week.",
+    blobId: "cy0nye3OLKT649K62imdNAlXgoehkoh0352bRGNPjuw",
+    suiObjectId: "0x35bf4c1ea493aea701260ffa5b0070622b17271e4495a030fe831c086e216c4d",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 4, 
+    name: "Linh Nguyen", 
+    email: "linh@techwave.vn", 
+    form: "Contact Forms", 
+    status: "new", 
+    priority: "low", 
+    time: "1h ago", 
+    note: "", 
+    content: "Could you provide documentation on the Walrus blob persistence feature?",
+    blobId: "mdNAlXgoehkoh0352bRGNPjuwcy0nye3OLKT649K62i",
+    suiObjectId: "0x4c1ea493aea701260ffa5b0070622b17271e4495a030fe831c086e216c4d35bf",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 5, 
+    name: "Carlos Mendez", 
+    email: "carlos@blockflow.co", 
+    form: "Feedback Survey", 
+    status: "resolved", 
+    priority: "low", 
+    time: "2h ago", 
+    note: "Resolved", 
+    content: "Bug report: form validation on mobile seems off for email fields.",
+    blobId: "GNPjuwcy0nye3OLKT649K62imdNAlXgoehkoh0352bR",
+    suiObjectId: "0x5b0070622b17271e4495a030fe831c086e216c4d35bf4c1ea493aea701260ffa",
+    network: "Testnet",
+    encryptedWithSeal: false
+  },
+  { 
+    id: 6, 
+    name: "Sophie Wen", 
+    email: "sophie@uxlab.design", 
+    form: "Demo Requests", 
+    status: "new", 
+    priority: "medium", 
+    time: "3h ago", 
+    note: "", 
+    content: "We run design workshops and would love a FormSeal integration. Can we schedule a call?",
+    blobId: "KT649K62imdNAlXgoehkoh0352bRGNPjuwcy0nye3OL",
+    suiObjectId: "0x6e216c4d35bf4c1ea493aea701260ffa5b0070622b17271e4495a030fe831c08",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 7, 
+    name: "Omar Hassan", 
+    email: "omar@databridge.io", 
+    form: "Contact Forms", 
+    status: "reviewed", 
+    priority: "high", 
+    time: "4h ago", 
+    note: "Enterprise lead!", 
+    content: "Inquiring about FormSeal for our data infrastructure. 500+ users, need SSO.",
+    blobId: "uwcy0nye3OLKT649K62imdNAlXgoehkoh0352bRGNPj",
+    suiObjectId: "0x701260ffa5b0070622b17271e4495a030fe831c086e216c4d35bf4c1ea493aea",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 8, 
+    name: "Tamara Johnson", 
+    email: "tamara@cloudnine.us", 
+    form: "Feedback Survey", 
+    status: "pending", 
+    priority: "medium", 
+    time: "5h ago", 
+    note: "", 
+    content: "Love the product! One request: dark mode for the form embed?",
+    blobId: "ehkoh0352bRGNPjuwcy0nye3OLKT649K62imdNAlXgo",
+    suiObjectId: "0x831c086e216c4d35bf4c1ea493aea701260ffa5b0070622b17271e4495a030fe",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 9, 
+    name: "Yuki Tanaka", 
+    email: "yuki@forgesync.jp", 
+    form: "Demo Requests", 
+    status: "new", 
+    priority: "low", 
+    time: "6h ago", 
+    note: "", 
+    content: "Looking for a form solution that supports Japanese characters fully.",
+    blobId: "0nye3OLKT649K62imdNAlXgoehkoh0352bRGNPjuwcy",
+    suiObjectId: "0x95a030fe831c086e216c4d35bf4c1ea493aea701260ffa5b0070622b17271e44",
+    network: "Testnet",
+    encryptedWithSeal: false
+  },
+  { 
+    id: 10, 
+    name: "Dev Patel", 
+    email: "dev@launchpad.in", 
+    form: "Contact Forms", 
+    status: "new", 
+    priority: "medium", 
+    time: "7h ago", 
+    note: "", 
+    content: "How does FormSeal handle GDPR compliance for European submissions?",
+    blobId: "649K62imdNAlXgoehkoh0352bRGNPjuwcy0nye3OLKT",
+    suiObjectId: "0xa493aea701260ffa5b0070622b17271e4495a030fe831c086e216c4d35bf4c1e",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 11, 
+    name: "Nina Kovac", 
+    email: "nina@eurotech.eu", 
+    form: "Feedback Survey", 
+    status: "reviewed", 
+    priority: "low", 
+    time: "8h ago", 
+    note: "", 
+    content: "The analytics dashboard could use more granular date range selection.",
+    blobId: "imdNAlXgoehkoh0352bRGNPjuwcy0nye3OLKT649K62",
+    suiObjectId: "0xbf4c1ea493aea701260ffa5b0070622b17271e4495a030fe831c086e216c4d35",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
+  { 
+    id: 12, 
+    name: "James O'Brien", 
+    email: "james@irishsaas.ie", 
+    form: "Demo Requests", 
+    status: "pending", 
+    priority: "medium", 
+    time: "10h ago", 
+    note: "Scheduled call", 
+    content: "We need a demo for our sales team. 3 decision-makers involved.",
+    blobId: "Xgoehkoh0352bRGNPjuwcy0nye3OLKT649K62imdNAl",
+    suiObjectId: "0xc086e216c4d35bf4c1ea493aea701260ffa5b0070622b17271e4495a030fe831",
+    network: "Testnet",
+    encryptedWithSeal: true
+  },
 ];
 
 const ACTIVITY = [
@@ -61,13 +230,50 @@ export function DashboardPage() {
   const [view, setView] = useState('dashboard');
   const [submissions, setSubmissions] = useState(SUBMISSIONS);
   const [activity, setActivity] = useState(ACTIVITY);
-  const [exportHist] = useState(EXPORT_HIST);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority] = useState('all');
   const [currentSubId, setCurrentSubId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<'detail' | 'newCollection' | null>(null);
   const [tempNote, setTempNote] = useState('');
+
+  // --- Export Function State ---
+  const [exportFormat, setExportFormat] = useState('CSV');
+  const [exportDateRange, setExportDateRange] = useState('Last 7 days');
+  const [exportCollection, setExportCollection] = useState('All collections');
+  const [includeAdminNotes, setIncludeAdminNotes] = useState(true);
+  const [includeMetadata, setIncludeMetadata] = useState(true);
+  const [exportHistState, setExportHistState] = useState(EXPORT_HIST);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportToast, setExportToast] = useState(false);
+
+  const executeExport = () => {
+    setIsExporting(true);
+    setExportToast(false);
+    setTimeout(() => {
+      setIsExporting(false);
+      setExportToast(true);
+      // Prepend to persistent list
+      const newEntry = {
+        fmt: exportFormat,
+        col: exportCollection,
+        records: exportCollection === 'All collections' ? 248 : Math.floor(Math.random() * 80) + 20,
+        date: 'Just now'
+      };
+      setExportHistState(prev => [newEntry, ...prev]);
+      
+      // Update real-time global event activity feed
+      const newAct = {
+        color: 'var(--blue)',
+        text: `Export completed — <strong>${exportFormat}</strong> · ${newEntry.records} records`,
+        time: 'Just now'
+      };
+      setActivity(prev => [newAct, ...prev]);
+
+      // Dismiss feedback gracefully
+      setTimeout(() => setExportToast(false), 4000);
+    }, 1000);
+  };
 
   // --- Filtering ---
   const filteredSubmissions = useMemo(() => {
@@ -148,6 +354,7 @@ export function DashboardPage() {
         <SidebarItem active={view === 'dashboard'} onClick={() => showView('dashboard')} icon={<SquaresFour size={20} />} label="Dashboard" />
         <SidebarItem active={view === 'submissions'} onClick={() => showView('submissions')} icon={<FileText size={20} />} label="Submissions" />
         <SidebarItem active={view === 'collections'} onClick={() => showView('collections')} icon={<Database size={20} />} label="Collections" />
+        <SidebarItem active={view === 'prioritize'} onClick={() => { showView('prioritize'); if (filteredSubmissions.length > 0 && currentSubId === null) { setCurrentSubId(filteredSubmissions[0].id); setTempNote(filteredSubmissions[0].note); } }} icon={<CheckSquare size={20} />} label="Feedback" />
         <SidebarItem active={view === 'export'} onClick={() => showView('export')} icon={<Export size={20} />} label="Export Data" />
       </div>
 
@@ -223,10 +430,16 @@ export function DashboardPage() {
 
           {view === 'submissions' && (
             <div id="view-submissions" className="animate-fade-in">
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px' }}>
                 <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--green)' }}></span>
+                    <span style={{ fontSize: '11px', fontWeight: '800', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--green)' }}>
+                      Sui / Walrus Testnet Active
+                    </span>
+                  </div>
                   <h1 style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.02em', marginBottom: '8px' }}>Submissions</h1>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Batch decrypt and manage your form data.</p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Batch decrypt and verify object-bound records from your permanent data containers.</p>
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <button className="btn" onClick={() => setView('export')}><DownloadSimple size={18} style={{ marginRight: 8 }} /> Batch Export</button>
@@ -261,6 +474,7 @@ export function DashboardPage() {
                         <tr>
                           <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Submitter</th>
                           <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Collection</th>
+                          <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Storage Binding</th>
                           <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
                           <th style={{ textAlign: 'left', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Time</th>
                           <th style={{ textAlign: 'right', padding: '16px 24px', fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Action</th>
@@ -275,6 +489,18 @@ export function DashboardPage() {
                             </td>
                             <td style={{ padding: '16px 24px' }}>
                               <span className="tag" style={{ background: 'var(--surface2)', color: 'var(--text-secondary)' }}>{s.form}</span>
+                            </td>
+                            <td style={{ padding: '16px 24px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '10px', fontWeight: '800', fontFamily: 'var(--mono)', padding: '2px 6px', borderRadius: '4px', background: 'var(--surface2)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>
+                                  WALRUS TESTNET
+                                </span>
+                                {(s as any).encryptedWithSeal && (
+                                  <span title="Threshold Encrypted via Seal SDK" style={{ color: 'var(--green)', display: 'flex', alignItems: 'center' }}>
+                                    <Seal size={14} weight="fill" />
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td style={{ padding: '16px 24px' }}>
                               <StatusBadge status={s.status} />
@@ -336,27 +562,32 @@ export function DashboardPage() {
                   </div>
                   <div style={{ padding: '32px' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' }}>
-                      <FormatSelectionBtn icon={<FileText size={24} />} title="CSV" sub="Spreadsheet" />
-                      <FormatSelectionBtn icon={<Code size={24} />} title="JSON" sub="Raw data" />
-                      <FormatSelectionBtn icon={<FilePdf size={24} />} title="PDF" sub="Report" />
+                      <FormatSelectionBtn active={exportFormat === 'CSV'} onClick={() => setExportFormat('CSV')} icon={<FileText size={24} />} title="CSV" sub="Spreadsheet" />
+                      <FormatSelectionBtn active={exportFormat === 'JSON'} onClick={() => setExportFormat('JSON')} icon={<Code size={24} />} title="JSON" sub="Raw data" />
+                      <FormatSelectionBtn active={exportFormat === 'PDF'} onClick={() => setExportFormat('PDF')} icon={<FilePdf size={24} />} title="PDF" sub="Report" />
                     </div>
 
                     <div style={{ marginBottom: '24px' }}>
                       <label style={{ display: 'block', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Date range</label>
-                      <select className="btn" style={{ 
-                        width: '100%', 
-                        textAlign: 'left', 
-                        padding: '12px 16px', 
-                        background: 'white', 
-                        border: '1px solid rgba(0,0,0,0.1)', 
-                        borderRadius: '12px', 
-                        fontSize: '14px', 
-                        outline: 'none',
-                        appearance: 'none',
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B6B66' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E")`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'right 16px center'
-                      }}>
+                      <select 
+                        value={exportDateRange}
+                        onChange={(e) => setExportDateRange(e.target.value)}
+                        className="btn" 
+                        style={{ 
+                          width: '100%', 
+                          textAlign: 'left', 
+                          padding: '12px 16px', 
+                          background: 'white', 
+                          border: '1px solid rgba(0,0,0,0.1)', 
+                          borderRadius: '12px', 
+                          fontSize: '14px', 
+                          outline: 'none',
+                          appearance: 'none',
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B6B66' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 16px center'
+                        }}
+                      >
                         <option>Last 7 days</option>
                         <option>Last 30 days</option>
                         <option>All time</option>
@@ -365,40 +596,75 @@ export function DashboardPage() {
 
                     <div style={{ marginBottom: '24px' }}>
                       <label style={{ display: 'block', fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>Collection filter</label>
-                      <select className="btn" style={{ 
-                        width: '100%', 
-                        textAlign: 'left', 
-                        padding: '12px 16px', 
-                        background: 'white', 
-                        border: '1px solid rgba(0,0,0,0.1)', 
-                        borderRadius: '12px', 
-                        fontSize: '14px', 
-                        outline: 'none',
-                        appearance: 'none',
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B6B66' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E")`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'right 16px center'
-                      }}>
+                      <select 
+                        value={exportCollection}
+                        onChange={(e) => setExportCollection(e.target.value)}
+                        className="btn" 
+                        style={{ 
+                          width: '100%', 
+                          textAlign: 'left', 
+                          padding: '12px 16px', 
+                          background: 'white', 
+                          border: '1px solid rgba(0,0,0,0.1)', 
+                          borderRadius: '12px', 
+                          fontSize: '14px', 
+                          outline: 'none',
+                          appearance: 'none',
+                          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236B6B66' viewBox='0 0 256 256'%3E%3Cpath d='M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80a8,8,0,0,1,11.32-11.32L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z'%3E%3C/path%3E%3C/svg%3E")`,
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'right 16px center'
+                        }}
+                      >
                         <option>All collections</option>
-                        <option>Bug Report</option>
-                        <option>Player Feedback</option>
+                        <option>Contact Forms</option>
+                        <option>Feedback Survey</option>
+                        <option>Demo Requests</option>
                       </select>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }}>
-                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                          <Check size={12} weight="bold" />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
+                      <label onClick={() => setIncludeAdminNotes(!includeAdminNotes)} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer', userSelect: 'none' }}>
+                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: includeAdminNotes ? 'var(--text-primary)' : 'white', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.15s ease' }}>
+                          {includeAdminNotes && <Check size={12} weight="bold" />}
                         </div>
                         Include admin notes
                       </label>
-                      <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer' }}>
-                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                          <Check size={12} weight="bold" />
+                      <label onClick={() => setIncludeMetadata(!includeMetadata)} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', cursor: 'pointer', userSelect: 'none' }}>
+                        <div style={{ width: '18px', height: '18px', borderRadius: '4px', background: includeMetadata ? 'var(--text-primary)' : 'white', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.15s ease' }}>
+                          {includeMetadata && <Check size={12} weight="bold" />}
                         </div>
                         Include metadata
                       </label>
                     </div>
+
+                    {exportToast && (
+                      <div style={{ padding: '12px 16px', borderRadius: '12px', background: 'var(--surface2)', border: '1px solid var(--green)', color: 'var(--text-primary)', fontSize: '13px', fontWeight: '600', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', animation: 'fadeIn 0.3s ease' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--green)' }}></div>
+                        Successfully exported {exportFormat} package to Secure Downloader.
+                      </div>
+                    )}
+
+                    <button 
+                      onClick={executeExport}
+                      disabled={isExporting}
+                      className="btn primary" 
+                      style={{ 
+                        width: '100%', 
+                        padding: '16px', 
+                        borderRadius: '14px', 
+                        fontWeight: '800', 
+                        fontSize: '15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        opacity: isExporting ? 0.7 : 1,
+                        cursor: isExporting ? 'wait' : 'pointer'
+                      }}
+                    >
+                      <DownloadSimple size={20} weight="bold" />
+                      {isExporting ? `Compiling ${exportFormat} bundle...` : `Execute Data Export (${exportFormat})`}
+                    </button>
                   </div>
                 </div>
 
@@ -408,8 +674,8 @@ export function DashboardPage() {
                     <h2 style={{ fontSize: '16px', fontWeight: '700' }}>Export History</h2>
                   </div>
                   <div>
-                    {exportHist.map((ex, i) => (
-                      <div key={i} style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', borderBottom: i < exportHist.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                    {exportHistState.map((ex, i) => (
+                      <div key={i} style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px', borderBottom: i < exportHistState.length - 1 ? '1px solid var(--border)' : 'none' }}>
                         <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>
                           <DownloadSimple size={20} />
                         </div>
@@ -421,6 +687,156 @@ export function DashboardPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {view === 'prioritize' && (
+            <div id="view-prioritize" className="animate-fade-in">
+              <div style={{ marginBottom: '32px' }}>
+                <h1 style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.02em', marginBottom: '8px' }}>Prioritize Feedback & Notes</h1>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '15px' }}>Triage incoming data, append persistent admin annotations, and update urgency weights.</p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '24px', alignItems: 'start' }}>
+                {/* Left side list */}
+                <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
+                  <div style={{ padding: '16px 20px', background: 'var(--surface2)', borderBottom: '1px solid var(--border)', fontSize: '12px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Select Item ({filteredSubmissions.length})
+                  </div>
+                  <div style={{ maxHeight: '540px', overflowY: 'auto' }}>
+                    {filteredSubmissions.map(s => {
+                      const isSel = s.id === currentSubId;
+                      return (
+                        <div 
+                          key={s.id} 
+                          onClick={() => { setCurrentSubId(s.id); setTempNote(s.note || ''); }}
+                          style={{ 
+                            padding: '16px 20px', 
+                            borderBottom: '1px solid var(--border)', 
+                            background: isSel ? 'var(--surface2)' : 'white', 
+                            borderLeft: isSel ? '3px solid var(--text-primary)' : '3px solid transparent',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                            <div style={{ fontWeight: '700', fontSize: '14px', color: 'var(--text-primary)' }}>{s.name}</div>
+                            <span style={{ fontSize: '10px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase', background: s.priority === 'high' ? 'var(--red-bg)' : s.priority === 'medium' ? 'var(--amber-bg)' : 'var(--surface2)', color: s.priority === 'high' ? 'var(--red)' : s.priority === 'medium' ? 'var(--amber)' : 'var(--text-tertiary)' }}>
+                              {s.priority}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {s.form}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right side active annotation canvas */}
+                <div className="card" style={{ padding: '32px' }}>
+                  {currentSub ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--border)', paddingBottom: '20px' }}>
+                        <div>
+                          <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px' }}>Submitter</div>
+                          <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '2px' }}>{currentSub.name}</h2>
+                          <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{currentSub.email} · <span style={{ color: 'var(--text-tertiary)' }}>{currentSub.time}</span></div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <span className="tag" style={{ background: 'var(--surface2)' }}>{currentSub.form}</span>
+                          <StatusBadge status={currentSub.status} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '8px' }}>Message Submission</div>
+                        <div style={{ padding: '20px', borderRadius: '14px', background: 'var(--surface2)', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-primary)' }}>
+                          {currentSub.content}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '10px' }}>Urgency Weight</div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          {(['high', 'medium', 'low'] as const).map(p => (
+                            <button
+                              key={p}
+                              onClick={() => {
+                                setSubmissions(prev => prev.map(item => item.id === currentSub.id ? { ...item, priority: p } : item));
+                                const actText = `Priority updated to <strong>${p.toUpperCase()}</strong> for ${currentSub.name}`;
+                                setActivity(prev => [{ color: p === 'high' ? 'var(--red)' : p === 'medium' ? 'var(--amber)' : 'var(--text-tertiary)', text: actText, time: 'Just now' }, ...prev]);
+                              }}
+                              className="btn"
+                              style={{ 
+                                flex: 1, 
+                                padding: '10px', 
+                                borderRadius: '10px', 
+                                fontSize: '13px', 
+                                fontWeight: '700',
+                                textTransform: 'capitalize',
+                                border: currentSub.priority === p ? '2px solid var(--text-primary)' : '1px solid var(--border)',
+                                background: currentSub.priority === p ? 'var(--surface2)' : 'white',
+                                color: currentSub.priority === p ? 'var(--text-primary)' : 'var(--text-secondary)'
+                              }}
+                            >
+                              {p} Priority
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '10px' }}>Admin Annotation Notes</div>
+                        <textarea
+                          value={tempNote}
+                          onChange={(e) => setTempNote(e.target.value)}
+                          placeholder="Type persistent editorial feedback or escalation routing instructions..."
+                          className="btn"
+                          style={{ 
+                            width: '100%', 
+                            height: '140px', 
+                            textAlign: 'left', 
+                            padding: '16px', 
+                            background: 'white', 
+                            border: '1px solid var(--border)', 
+                            borderRadius: '12px',
+                            fontSize: '14px',
+                            lineHeight: '1.5',
+                            outline: 'none'
+                          }}
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                        <button 
+                          onClick={() => {
+                            setSubmissions(prev => prev.map(item => item.id === currentSub.id ? { ...item, note: tempNote, status: 'reviewed' } : item));
+                            if (tempNote) {
+                              setActivity(prev => [{ color: 'var(--sage)', text: `Note appended to <strong>${currentSub.name}</strong> record`, time: 'Just now' }, ...prev]);
+                            }
+                            // Cycle to next
+                            const nextIdx = filteredSubmissions.findIndex(s => s.id === currentSub.id) + 1;
+                            if (nextIdx < filteredSubmissions.length) {
+                              setCurrentSubId(filteredSubmissions[nextIdx].id);
+                              setTempNote(filteredSubmissions[nextIdx].note || '');
+                            }
+                          }}
+                          className="btn primary" 
+                          style={{ padding: '12px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: '800' }}
+                        >
+                          Save Annotation & Next →
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: '14px', fontWeight: '600' }}>
+                      Select a submission record from the triage queue to configure custom priority weights and internal notes.
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -467,6 +883,32 @@ export function DashboardPage() {
                     <div>
                        <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '8px' }}>Submitted</div>
                        <div style={{ fontWeight: '600' }}>{currentSub?.time}</div>
+                    </div>
+                 </div>
+
+                 <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Globe size={14} /> Persistent Object Coordinates
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', background: 'white', padding: '16px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                      <div>
+                        <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--text-tertiary)', display: 'block', marginBottom: '2px' }}>WALRUS BLOB ID</span>
+                        <code style={{ fontSize: '11px', fontFamily: 'var(--mono)', color: 'var(--text-primary)', wordBreak: 'break-all', display: 'block', background: 'var(--surface2)', padding: '6px 8px', borderRadius: '6px' }}>
+                          {(currentSub as any)?.blobId}
+                        </code>
+                      </div>
+                      <div>
+                        <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--text-tertiary)', display: 'block', marginBottom: '2px' }}>SUI OBJECT BINDING</span>
+                        <code style={{ fontSize: '11px', fontFamily: 'var(--mono)', color: 'var(--text-primary)', wordBreak: 'break-all', display: 'block', background: 'var(--surface2)', padding: '6px 8px', borderRadius: '6px' }}>
+                          {(currentSub as any)?.suiObjectId}
+                        </code>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                        <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)' }}>Seal Encryption</span>
+                        <span style={{ fontSize: '11px', fontWeight: '800', color: (currentSub as any)?.encryptedWithSeal ? 'var(--green)' : 'var(--text-tertiary)' }}>
+                          {(currentSub as any)?.encryptedWithSeal ? 'Active (Threshold Keyed)' : 'Unencrypted Cleartext'}
+                        </span>
+                      </div>
                     </div>
                  </div>
               </div>
@@ -594,7 +1036,7 @@ function CollectionCard({ title, count, icon, color }: any) {
   );
 }
 
-function FormatSelectionBtn({ icon, title, sub, onClick }: any) {
+function FormatSelectionBtn({ icon, title, sub, onClick, active }: any) {
   return (
     <button 
       onClick={onClick} 
@@ -605,19 +1047,22 @@ function FormatSelectionBtn({ icon, title, sub, onClick }: any) {
         flexDirection: 'column', 
         gap: '6px', 
         borderRadius: '16px', 
-        border: '1px solid var(--border)', 
-        background: 'white', 
+        border: '1px solid',
+        borderColor: active ? 'var(--text-primary)' : 'var(--border)',
+        boxShadow: active ? '0 0 0 1px var(--text-primary)' : 'none',
+        background: active ? 'var(--surface2)' : 'white', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center',
         transition: 'all 0.2s ease',
         cursor: 'pointer',
-        outline: 'none'
+        outline: 'none',
+        position: 'relative'
       }}
-      onMouseOver={(e) => { e.currentTarget.style.background = 'var(--surface2)'; }}
-      onMouseOut={(e) => { e.currentTarget.style.background = 'white'; }}
+      onMouseOver={(e) => { if (!active) e.currentTarget.style.background = 'var(--surface2)'; }}
+      onMouseOut={(e) => { if (!active) e.currentTarget.style.background = 'white'; }}
     >
-      <div style={{ color: 'var(--text-tertiary)', marginBottom: '4px' }}>
+      <div style={{ color: active ? 'var(--text-primary)' : 'var(--text-tertiary)', marginBottom: '4px' }}>
         {icon}
       </div>
       <div style={{ fontWeight: '800', fontSize: '16px', color: 'var(--text-primary)', marginBottom: '2px' }}>{title}</div>
