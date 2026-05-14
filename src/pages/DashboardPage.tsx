@@ -25,6 +25,8 @@ import {
   User,
   AppWindow
 } from "@phosphor-icons/react";
+import { useCurrentAccount, ConnectModal } from '@mysten/dapp-kit';
+import { Button } from '@/components/ui';
 
 // --- Mock Data ---
 const SUBMISSIONS = [
@@ -227,8 +229,11 @@ const EXPORT_HIST = [
 ];
 
 export function DashboardPage() {
+  const currentAccount = useCurrentAccount();
   const [view, setView] = useState('dashboard');
   const [submissions, setSubmissions] = useState(SUBMISSIONS);
+
+  /* Connection restricted state check moved inside container area */
   const [activity, setActivity] = useState(ACTIVITY);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -350,17 +355,48 @@ export function DashboardPage() {
   return (
     <div className="admin-layout">
       {/* --- Sidebar --- */}
-      <div className="admin-sidebar">
-        <SidebarItem active={view === 'dashboard'} onClick={() => showView('dashboard')} icon={<SquaresFour size={20} />} label="Dashboard" />
-        <SidebarItem active={view === 'submissions'} onClick={() => showView('submissions')} icon={<FileText size={20} />} label="Submissions" />
-        <SidebarItem active={view === 'collections'} onClick={() => showView('collections')} icon={<Database size={20} />} label="Collections" />
-        <SidebarItem active={view === 'prioritize'} onClick={() => { showView('prioritize'); if (filteredSubmissions.length > 0 && currentSubId === null) { setCurrentSubId(filteredSubmissions[0].id); setTempNote(filteredSubmissions[0].note); } }} icon={<CheckSquare size={20} />} label="Feedback" />
-        <SidebarItem active={view === 'export'} onClick={() => showView('export')} icon={<Export size={20} />} label="Export Data" />
-      </div>
+      {currentAccount && (
+        <div className="admin-sidebar">
+          <SidebarItem active={view === 'dashboard'} onClick={() => showView('dashboard')} icon={<SquaresFour size={20} />} label="Dashboard" />
+          <SidebarItem active={view === 'submissions'} onClick={() => showView('submissions')} icon={<FileText size={20} />} label="Submissions" />
+          <SidebarItem active={view === 'collections'} onClick={() => showView('collections')} icon={<Database size={20} />} label="Collections" />
+          <SidebarItem active={view === 'prioritize'} onClick={() => { showView('prioritize'); if (filteredSubmissions.length > 0 && currentSubId === null) { setCurrentSubId(filteredSubmissions[0].id); setTempNote(filteredSubmissions[0].note); } }} icon={<CheckSquare size={20} />} label="Feedback" />
+          <SidebarItem active={view === 'export'} onClick={() => showView('export')} icon={<Export size={20} />} label="Export Data" />
+        </div>
+      )}
 
       <div className="admin-main">
         <div className="content-area">
-          {view === 'dashboard' && (
+          {!currentAccount ? (
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-16rem)] w-full py-12">
+              <div className="doppelrand max-w-xl w-full mx-auto animate-fade-in">
+                <div className="doppelrand-inner bg-white p-10 md:p-14 text-center flex flex-col items-center justify-center min-h-[380px] border border-black/5 shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-black/[0.03] border border-black/[0.05] flex items-center justify-center mb-6">
+                    <svg className="w-8 h-8 text-black/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <h2 className="text-[1.375rem] font-bold text-black tracking-tight mb-2">Access Restricted</h2>
+                  <p className="text-[0.9375rem] font-medium text-black/50 leading-relaxed max-w-sm mb-8">
+                    Connect your Web3 wallet to access the centralized management Dashboard and encrypted responses.
+                  </p>
+                  <ConnectModal
+                    trigger={
+                      <Button
+                        variant="primary"
+                        className="h-12 px-8 rounded-xl font-bold text-xs tracking-wider uppercase bg-black text-white hover:bg-black/90 hover:scale-105 active:scale-95 transition-all shadow-md shadow-black/5"
+                      >
+                        Connect Wallet
+                      </Button>
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {currentAccount && view === 'dashboard' && (
             <div id="view-dashboard" className="animate-fade-in">
               <div style={{ marginBottom: '32px' }}>
                 <h1 style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.02em', marginBottom: '8px' }}>Performance Overview</h1>
@@ -428,7 +464,7 @@ export function DashboardPage() {
             </div>
           )}
 
-          {view === 'submissions' && (
+          {currentAccount && view === 'submissions' && (
             <div id="view-submissions" className="animate-fade-in">
                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px' }}>
                 <div>
@@ -532,7 +568,7 @@ export function DashboardPage() {
             </div>
           )}
 
-          {view === 'collections' && (
+          {currentAccount && view === 'collections' && (
              <div id="view-collections" className="animate-fade-in">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px' }}>
                   <div>
@@ -552,7 +588,7 @@ export function DashboardPage() {
              </div>
           )}
 
-          {view === 'export' && (
+          {currentAccount && view === 'export' && (
             <div id="view-export" className="animate-fade-in">
               <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', alignItems: 'start' }}>
                 <div className="card">
@@ -692,7 +728,7 @@ export function DashboardPage() {
             </div>
           )}
 
-          {view === 'prioritize' && (
+          {currentAccount && view === 'prioritize' && (
             <div id="view-prioritize" className="animate-fade-in">
               <div style={{ marginBottom: '32px' }}>
                 <h1 style={{ fontSize: '28px', fontWeight: '800', letterSpacing: '-0.02em', marginBottom: '8px' }}>Prioritize Feedback & Notes</h1>

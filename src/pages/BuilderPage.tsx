@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useBuilderStore } from '@/stores/builderStore';
+import { useCurrentAccount, ConnectModal } from '@mysten/dapp-kit';
 import {
   DndContext,
   closestCenter,
@@ -88,9 +89,12 @@ const TEMPLATES = [
 
 export function BuilderPage() {
   const store = useBuilderStore();
+  const currentAccount = useCurrentAccount();
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewValues, setPreviewValues] = useState<Record<string, any>>({});
+
+  /* Wallet access restricted state check relocated below structural header */
 
 
 
@@ -157,19 +161,52 @@ export function BuilderPage() {
     <div className="flex-1 px-4 md:px-8 pt-36 pb-10 bg-[#fafafa]">
       <div className="max-w-[1200px] mx-auto">
         {/* ─── Header ─── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 animate-fade-in">
-          <div className="mb-0">
-            <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
-              Form Builder
-            </h1>
-            <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
-              Create and publish decentralized forms with Walrus.
-            </p>
+        {currentAccount && (
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 animate-fade-in">
+            <div className="mb-0">
+              <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
+                Form Builder
+              </h1>
+              <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
+                Create and publish decentralized forms with Walrus.
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* ─── Templates & Actions Bar ─── */}
-        <div className="mb-10 py-3 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {!currentAccount ? (
+          <div className="flex flex-col items-center justify-center min-h-[calc(100vh-16rem)] w-full py-12">
+            <div className="doppelrand max-w-xl w-full mx-auto animate-fade-in">
+              <div className="doppelrand-inner bg-white p-10 md:p-14 text-center flex flex-col items-center justify-center min-h-[380px] border border-black/5 shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-black/[0.03] border border-black/[0.05] flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-black/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <h2 className="text-[1.375rem] font-bold text-black tracking-tight mb-2">Access Restricted</h2>
+                <p className="text-[0.9375rem] font-medium text-black/50 leading-relaxed max-w-sm mb-8">
+                  Connect your Web3 wallet to authenticate and deploy decentralized forms to Walrus.
+                </p>
+                <ConnectModal
+                  trigger={
+                    <Button
+                      variant="primary"
+                      className="h-12 px-8 rounded-xl font-bold text-xs tracking-wider uppercase bg-black text-white hover:bg-black/90 hover:scale-105 active:scale-95 transition-all shadow-md shadow-black/5"
+                    >
+                      Connect Wallet
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {currentAccount && (
+          <>
+            {/* ─── Templates & Actions Bar ─── */}
+            <div className="mb-10 py-3 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-6 overflow-hidden">
             <span className="text-[0.625rem] font-black text-black/40 uppercase tracking-[0.2em] whitespace-nowrap">
               Templates
@@ -423,6 +460,9 @@ export function BuilderPage() {
             </div>
           </div>
         </div>
+
+          </>
+        )}
 
         {/* ─── Preview Modal ─── */}
 

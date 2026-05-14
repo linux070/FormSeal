@@ -5,9 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface WalletState {
   address: string | null;
+  providerName: string;
+  network: string;
   isConnecting: boolean;
-  connect: () => void;
+  connect: (providerOverride?: string) => void;
   disconnect: () => void;
+  switchNetwork: (net: string) => void;
 }
 
 interface ToastState {
@@ -39,22 +42,32 @@ export const useWalletStore = create<WalletState>()(
   persist(
     (set) => ({
       address: null,
+      providerName: 'Slush Wallet Adapter',
+      network: 'Sui Testnet',
       isConnecting: false,
 
-      connect: () => {
+      connect: (providerOverride?: string) => {
         set({ isConnecting: true });
-        // Simulate wallet connection with a deterministic address
+        // Simulate real-world @mysten/dapp-kit connection flow via custom registered proxies
         setTimeout(() => {
           const addr = '0x' + Array.from({ length: 64 }, () =>
             '0123456789abcdef'[Math.floor(Math.random() * 16)]
           ).join('');
-          set({ address: addr, isConnecting: false });
-        }, 800);
+          set({ 
+            address: addr, 
+            providerName: providerOverride || 'Slush Wallet Adapter',
+            isConnecting: false 
+          });
+        }, 600);
       },
 
       disconnect: () => {
         set({ address: null, isConnecting: false });
       },
+
+      switchNetwork: (net: string) => {
+        set({ network: net });
+      }
     }),
     {
       name: 'formseal-wallet',
