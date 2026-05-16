@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBuilderStore } from '@/stores/builderStore';
 import { useCurrentAccount, ConnectModal } from '@mysten/dapp-kit';
 import {
@@ -20,9 +21,6 @@ import {
   Eye,
   Copy,
   PencilSimpleLine,
-  Bug,
-  Lightbulb,
-  ChatCircleText,
   Palette,
   CheckSquare,
   UploadSimple,
@@ -59,39 +57,7 @@ const FIELD_TYPES: { type: FormField['type']; label: string; icon: any }[] = [
   { type: 'url', label: 'URL', icon: Globe },
 ];
 
-const TEMPLATES = [
-  {
-    id: 'bug_report',
-    name: 'Bug Report',
-    description: 'Report technical issues and reproduction steps for the core protocol.',
-    icon: Bug,
-    fields: [
-      { type: 'short_text', labelPlaceholder: 'Issue Title', required: true },
-      { type: 'long_text', labelPlaceholder: 'Reproduction Steps', required: true },
-      { type: 'file_upload', labelPlaceholder: 'Visual Evidence', required: false },
-    ],
-  },
-  {
-    id: 'feature_request',
-    name: 'Feature Request',
-    description: 'Propose new architectural primitives and functional improvements.',
-    icon: Lightbulb,
-    fields: [
-      { type: 'short_text', labelPlaceholder: 'Proposed Feature Name', required: true },
-      { type: 'long_text', labelPlaceholder: 'Functional Specification & Rationale', required: true },
-    ],
-  },
-  {
-    id: 'user_survey',
-    name: 'Community Feedback',
-    description: 'Share your experience and suggest protocol-level optimizations.',
-    icon: ChatCircleText,
-    fields: [
-      { type: 'star_rating', labelPlaceholder: 'Protocol Satisfaction Rating', required: true },
-      { type: 'long_text', labelPlaceholder: 'What is your primary use case?', required: false },
-    ],
-  },
-];
+
 
 export function BuilderPage() {
   const store = useBuilderStore();
@@ -100,7 +66,7 @@ export function BuilderPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewValues, setPreviewValues] = useState<Record<string, any>>({});
   const [view, setView] = useState<'selection' | 'builder'>('selection');
-  const [selectingTemplate, setSelectingTemplate] = useState(false);
+  const navigate = useNavigate();
   const coverFileInputRef = useRef<HTMLInputElement>(null);
   const logoFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -161,34 +127,7 @@ export function BuilderPage() {
     setView('builder');
   };
 
-  const applyTemplate = (template: any) => {
-    store.saveHistory();
-    store.resetBuilder();
-    store.setTitle(template.name);
-    store.setDescription(template.description);
-    setView('builder');
 
-    // Batch add fields
-    template.fields.forEach((f: any) => {
-      store.addField(f.type);
-    });
-
-    // Update labels and placeholders
-    setTimeout(() => {
-      const fields = useBuilderStore.getState().form.fields;
-      const templateFields = template.fields;
-      templateFields.forEach((tf: any, i: number) => {
-        const field = fields[i];
-        if (field) {
-          store.updateField(field.id, {
-            label: "", // Keep label empty so placeholder shows
-            labelPlaceholder: tf.labelPlaceholder,
-            required: tf.required
-          });
-        }
-      });
-    }, 0);
-  };
 
   return (
     <div className="flex-1 px-4 md:px-8 pt-36 pb-10 bg-[#fafafa]">
@@ -240,112 +179,63 @@ export function BuilderPage() {
               </Button>
             </div>
 
-            {!selectingTemplate ? (
-              <div className="flex flex-col items-center justify-center text-center pb-12 mb-6">
-                <div className="w-32 h-32 mb-6 flex items-center justify-center opacity-20 transition-opacity">
-                  <div className="relative">
-                    <Folder weight="thin" className="w-32 h-32 text-black" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] text-[2.5rem] mt-1">
-                       ☹
-                    </div>
+            <div className="flex flex-col items-center justify-center text-center pb-12 mb-6">
+              <div className="w-32 h-32 mb-6 flex items-center justify-center opacity-20 transition-opacity">
+                <div className="relative">
+                  <Folder weight="thin" className="w-32 h-32 text-black" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[40%] text-[2.5rem] mt-1">
+                     ☹
                   </div>
                 </div>
-                <h2 className="text-[1.875rem] font-bold tracking-tight text-black leading-tight mb-3">
-                  You don't have any forms
-                </h2>
-                <p className="text-[1.0625rem] text-black/40 font-medium max-w-[40ch] mx-auto leading-relaxed">
-                  Create a new form from scratch or use a template to get started.
-                </p>
               </div>
-            ) : (
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                <div>
-                  <h1 className="text-[1.75rem] font-bold tracking-tight text-black leading-tight">
-                    Choose a Template
-                  </h1>
-                  <p className="text-[1rem] text-black/50 mt-2 font-medium max-w-2xl leading-relaxed">
-                    Start with a pre-configured protocol structure.
-                  </p>
-                </div>
-                
-                <button 
-                  onClick={() => setSelectingTemplate(false)}
-                  className="group flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-black/5 transition-all"
-                >
-                   <ArrowLeft weight="bold" className="w-5 h-5 text-black/30 group-hover:text-black transition-colors" />
-                   <span className="text-[0.875rem] font-bold text-black/40 group-hover:text-black transition-colors">Back</span>
-                </button>
-              </div>
-            )}
+              <h2 className="text-[1.875rem] font-bold tracking-tight text-black leading-tight mb-3">
+                You don't have any forms
+              </h2>
+              <p className="text-[1.0625rem] text-black/40 font-medium max-w-[40ch] mx-auto leading-relaxed">
+                Create a new form from scratch or use a template to get started.
+              </p>
+            </div>
 
             <div className="max-w-[1200px] mx-auto">
-              {!selectingTemplate ? (
-                <div className="max-w-[800px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-                  {/* Start from Scratch Card */}
-                  <div
-                    onClick={startFromScratch}
-                    className="group relative flex flex-col bg-white rounded-[2.5rem] border border-black/[0.06] shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-500 overflow-hidden cursor-pointer h-[400px] items-center justify-center text-center p-12"
-                  >
-                    <div className="absolute inset-4 rounded-[1.8rem] border border-black/[0.02] bg-zinc-50/50 -z-0" />
-                    <div className="flex flex-col items-center justify-center gap-12 z-10">
-                      <div className="w-24 h-24 rounded-[2rem] bg-white shadow-md border border-black/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                        <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
-                          <Plus weight="bold" className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <h3 className="text-[1.375rem] font-bold text-black tracking-tight">Start from Scratch</h3>
-                        <p className="text-[0.875rem] font-medium text-black/30">Create a new form from scratch</p>
+              <div className="max-w-[800px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+                {/* Start from Scratch Card */}
+                <div
+                  onClick={startFromScratch}
+                  className="group relative flex flex-col bg-white rounded-[2.5rem] border border-black/[0.06] shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-500 overflow-hidden cursor-pointer h-[400px] items-center justify-center text-center p-12"
+                >
+                  <div className="absolute inset-4 rounded-[1.8rem] border border-black/[0.02] bg-zinc-50/50 -z-0" />
+                  <div className="flex flex-col items-center justify-center gap-12 z-10">
+                    <div className="w-24 h-24 rounded-[2rem] bg-white shadow-md border border-black/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                      <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                        <Plus weight="bold" className="w-6 h-6 text-white" />
                       </div>
                     </div>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-[1.375rem] font-bold text-black tracking-tight">Start from Scratch</h3>
+                      <p className="text-[0.875rem] font-medium text-black/30">Create a new form from scratch</p>
+                    </div>
                   </div>
+                </div>
 
-                  {/* Use a Template Card */}
-                  <div
-                    onClick={() => setSelectingTemplate(true)}
-                    className="group relative flex flex-col bg-white rounded-[2.5rem] border border-black/[0.06] shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-500 overflow-hidden cursor-pointer h-[400px] items-center justify-center text-center p-12"
-                  >
-                    <div className="absolute inset-4 rounded-[1.8rem] border border-black/[0.02] bg-zinc-50/50 -z-0" />
-                    <div className="flex flex-col items-center justify-center gap-12 z-10">
-                      <div className="w-24 h-24 rounded-[2rem] bg-white shadow-md border border-black/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                        <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
-                          <Stack weight="bold" className="w-6 h-6 text-white" />
-                        </div>
+                {/* Use a Template Card */}
+                <div
+                  onClick={() => navigate('/templates')}
+                  className="group relative flex flex-col bg-white rounded-[2.5rem] border border-black/[0.06] shadow-sm hover:shadow-2xl hover:shadow-black/[0.04] transition-all duration-500 overflow-hidden cursor-pointer h-[400px] items-center justify-center text-center p-12"
+                >
+                  <div className="absolute inset-4 rounded-[1.8rem] border border-black/[0.02] bg-zinc-50/50 -z-0" />
+                  <div className="flex flex-col items-center justify-center gap-12 z-10">
+                    <div className="w-24 h-24 rounded-[2rem] bg-white shadow-md border border-black/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                      <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center">
+                        <Stack weight="bold" className="w-6 h-6 text-white" />
                       </div>
-                      <div className="flex flex-col gap-2">
-                        <h3 className="text-[1.375rem] font-bold text-black tracking-tight">Use a Template</h3>
-                        <p className="text-[0.875rem] font-medium text-black/30">Select from available templates</p>
-                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <h3 className="text-[1.375rem] font-bold text-black tracking-tight">Use a Template</h3>
+                      <p className="text-[0.875rem] font-medium text-black/30">Select from available templates</p>
                     </div>
                   </div>
                 </div>
-              ) : (
-                /* Template List View */
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-                  {TEMPLATES.map((t) => {
-                    const Icon = t.icon;
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => applyTemplate(t)}
-                        className="flex flex-col gap-6 p-8 rounded-3xl bg-white border border-black/[0.04] shadow-sm hover:border-black/10 hover:shadow-xl hover:shadow-black/[0.02] transition-all duration-500 group text-left h-full"
-                      >
-                        <div className="w-14 h-14 rounded-2xl bg-black/[0.02] border border-black/[0.05] flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
-                          <Icon weight="bold" className="w-7 h-7" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <h4 className="text-[1.125rem] font-bold text-black group-hover:text-black transition-colors">
-                            {t.name}
-                          </h4>
-                          <p className="text-[0.875rem] font-medium text-black/40 leading-relaxed">
-                            {t.description}
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+              </div>
             </div>
           </div>
         )}

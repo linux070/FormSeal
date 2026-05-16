@@ -144,7 +144,7 @@ function HeroInteractiveForms() {
                             className="flex items-center gap-3 p-3 rounded-xl border border-black/[0.04] bg-[#fafafa] group cursor-default"
                           >
                             <div className={cn(
-                              "w-5 h-5 rounded-lg border flex items-center justify-center transition-all duration-300",
+                              "w-5 h-5 rounded-sm border flex items-center justify-center transition-all duration-300",
                               choice.checked ? "bg-black border-black text-white" : "border-black/10 bg-white"
                             )}>
                               <Check 

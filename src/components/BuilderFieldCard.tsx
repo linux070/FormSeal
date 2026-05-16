@@ -118,7 +118,7 @@ export function BuilderFieldCard({
               className="flex items-center gap-2.5 cursor-pointer select-none group/req"
             >
               <div 
-                className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center
+                className={`w-5 h-5 rounded-sm border-2 transition-all flex items-center justify-center
                   ${field.required ? 'bg-black border-black shadow-sm' : 'border-black/10 bg-white group-hover/req:border-black/20'}
                 `}
               >

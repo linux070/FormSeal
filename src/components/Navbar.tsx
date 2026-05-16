@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ConnectModal, useCurrentAccount, useDisconnectWallet } from '@mysten/dapp-kit';
 import { useWalletStore } from '@/stores/appStore';
-import { Button } from '@/components/ui';
+
 import {
   List,
   X,

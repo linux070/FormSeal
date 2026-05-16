@@ -257,7 +257,7 @@ export function FormFieldRenderer({
                 >
                   <div
                     className={`
-                      w-5 h-5 rounded-lg border-2 flex items-center justify-center
+                      w-5 h-5 rounded-sm border-2 flex items-center justify-center
                       transition-all duration-300 ease-[var(--ease-spring)] flex-shrink-0
                       ${isChecked
                         ? 'border-transparent shadow-sm'

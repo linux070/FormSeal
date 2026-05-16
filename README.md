@@ -1,10 +1,11 @@
 # FormSeal
 
 <p align="center">
-  <img src="public/formseal_logo.svg" alt="FormSeal Logo" width="120" height="120" />
+  <img src="public/formseal_header.svg" alt="FormSeal Header Logo" width="600" />
 </p>
 
 <h3 align="center">FORMSEAL</h3>
+
 
 <p align="center">
   <strong>A premium, Web3-native studio for decentralized form building, threshold-encrypted response ingestion, and permanent storage on the Walrus Protocol.</strong>
