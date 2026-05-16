@@ -14,6 +14,10 @@ interface BuilderState {
   setDescription: (description: string) => void;
   setAccentColor: (color: string) => void;
   setSensitive: (sensitive: boolean) => void;
+  setHasCover: (hasCover: boolean) => void;
+  setCoverUrl: (url: string) => void;
+  setLogoUrl: (url: string) => void;
+  setShowIcon: (showIcon: boolean) => void;
   setActiveField: (id: string | null) => void;
 
   addField: (type: FormField['type']) => void;
@@ -67,6 +71,10 @@ function createDefaultForm(): FormSchema {
     creatorAddress: '',
     createdAt: Date.now(),
     version: 1,
+    hasCover: false,
+    coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+    logoUrl: '',
+    showIcon: false,
   };
 }
 
@@ -115,6 +123,18 @@ export const useBuilderStore = create<BuilderState>()(
 
       setSensitive: (sensitive) =>
         set((s) => ({ form: { ...s.form, sensitive }, isDirty: true })),
+
+      setHasCover: (hasCover) =>
+        set((s) => ({ form: { ...s.form, hasCover }, isDirty: true })),
+
+      setCoverUrl: (coverUrl) =>
+        set((s) => ({ form: { ...s.form, coverUrl }, isDirty: true })),
+      
+      setLogoUrl: (logoUrl) =>
+        set((s) => ({ form: { ...s.form, logoUrl }, isDirty: true })),
+
+      setShowIcon: (showIcon) =>
+        set((s) => ({ form: { ...s.form, showIcon }, isDirty: true })),
 
       setActiveField: (id) => set({ activeFieldId: id }),
 

@@ -91,7 +91,7 @@ export function BuilderFieldCard({
       `}
     >
       <div className={`
-        bg-white rounded-xl border transition-all duration-300 overflow-hidden
+        bg-white rounded-md border transition-all duration-300 overflow-hidden
         ${isActive ? 'border-accent/30 shadow-md ring-1 ring-accent/10' : 'border-black/[0.08] hover:border-black/20 shadow-sm'}
       `}>
         {/* Top Header Row */}
@@ -146,7 +146,7 @@ export function BuilderFieldCard({
         {/* Field Body */}
         <div className="p-6 space-y-4">
           {/* Container 1: Field Type Display */}
-          <div className="w-full px-5 py-3.5 bg-black/[0.02] border border-black/[0.05] rounded-xl text-[0.8125rem] font-bold text-black/40 flex items-center gap-3">
+          <div className="w-full px-5 py-3.5 bg-black/[0.02] border border-black/[0.05] rounded-md text-[0.8125rem] font-bold text-black/40 flex items-center gap-3">
             <Icon weight="bold" className="w-4 h-4 opacity-40" />
             {FIELD_TYPE_LABELS[field.type]}
           </div>
@@ -158,7 +158,7 @@ export function BuilderFieldCard({
                 value={field.label}
                 onChange={(e) => onUpdate({ label: e.target.value })}
                 placeholder={field.labelPlaceholder || "Enter your long-form question..."}
-                className="w-full px-5 py-5 bg-white border border-black/10 rounded-xl text-[1rem] font-medium text-black focus:border-black/30 focus:outline-none transition-all resize-none min-h-[140px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="w-full px-5 py-5 bg-white border border-black/10 rounded-md text-[1rem] font-medium text-black focus:border-black/30 focus:outline-none transition-all resize-none min-h-[140px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
                   target.style.height = '140px';
@@ -171,7 +171,7 @@ export function BuilderFieldCard({
                 onChange={(e) => onUpdate({ label: e.target.value })}
                 onMouseDown={(e) => e.stopPropagation()}
                 placeholder={field.labelPlaceholder || "Enter your question title"}
-                className="!bg-white !border-black/10 !rounded-xl !py-5 !text-[1rem] !font-medium !text-black focus:!border-black/30 focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="!bg-white !border-black/10 !rounded-md !py-5 !text-[1rem] !font-medium !text-black focus:!border-black/30 focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
               />
             )}
           </div>
@@ -188,7 +188,7 @@ export function BuilderFieldCard({
                 onChange={(e) => onUpdate({ placeholder: e.target.value })}
                 onMouseDown={(e) => e.stopPropagation()}
                 placeholder="Enter placeholder for respondents..."
-                className="!bg-black/[0.02] !border-black/10 !border-dashed !rounded-xl !py-4 !text-[0.8125rem] !font-medium !text-black/60 placeholder:text-black/10 focus:!border-black/20 focus:!ring-0 transition-all"
+                className="!bg-black/[0.02] !border-black/10 !border-dashed !rounded-md !py-4 !text-[0.8125rem] !font-medium !text-black/60 placeholder:text-black/10 focus:!border-black/20 focus:!ring-0 transition-all"
               />
             </div>
           )}
@@ -203,7 +203,7 @@ export function BuilderFieldCard({
                 value={field.placeholder}
                 onChange={(e) => onUpdate({ placeholder: e.target.value })}
                 placeholder="Enter placeholder for respondents..."
-                className="w-full px-4 py-4 bg-black/[0.02] border border-dashed border-black/10 rounded-xl text-[0.8125rem] font-medium text-black/60 placeholder:text-black/10 focus:border-black/20 focus:outline-none transition-all resize-none min-h-[100px]"
+                className="w-full px-4 py-4 bg-black/[0.02] border border-dashed border-black/10 rounded-md text-[0.8125rem] font-medium text-black/60 placeholder:text-black/10 focus:border-black/20 focus:outline-none transition-all resize-none min-h-[100px]"
               />
             </div>
           )}
@@ -214,7 +214,7 @@ export function BuilderFieldCard({
                 <div className="w-1.5 h-1.5 rounded-full bg-black/10" />
                 <span className="text-[0.6875rem] font-black text-black/20 uppercase tracking-widest">Upload Hint</span>
               </div>
-              <div className="w-full py-8 bg-black/[0.02] border border-dashed border-black/10 rounded-xl flex flex-col items-center justify-center gap-3 group/upload">
+              <div className="w-full py-8 bg-black/[0.02] border border-dashed border-black/10 rounded-md flex flex-col items-center justify-center gap-3 group/upload">
                 <UploadSimple weight="bold" className="w-6 h-6 text-black/20 group-hover/upload:text-black/40 transition-colors" />
                 <Input
                   value={field.placeholder}
@@ -246,7 +246,7 @@ export function BuilderFieldCard({
                   onChange={(e) => onUpdate({ placeholder: e.target.value })}
                   onMouseDown={(e) => e.stopPropagation()}
                   placeholder="Select an option..."
-                  className="!bg-black/[0.02] !border-black/10 !border-dashed !rounded-xl !py-4 !text-[0.8125rem] !font-medium !text-black/60 placeholder:text-black/10 focus:!border-black/20 focus:!ring-0 transition-all !pr-10"
+                  className="!bg-black/[0.02] !border-black/10 !border-dashed !rounded-md !py-4 !text-[0.8125rem] !font-medium !text-black/60 placeholder:text-black/10 focus:!border-black/20 focus:!ring-0 transition-all !pr-10"
                 />
                 <CaretDown weight="bold" className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black/20" />
               </div>

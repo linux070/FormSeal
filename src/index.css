@@ -90,6 +90,12 @@
     border: none;
     background: none;
     padding: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:focus, button:active {
+    outline: none !important;
   }
 
   input, select, textarea {
@@ -367,24 +373,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 18px;
+  height: 44px;
+  padding: 0 20px;
   border-radius: var(--radius-md);
   font-size: 14px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--surface);
   border: 1px solid var(--border-md);
   color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .btn.primary {
   background: var(--accent);
   color: white;
   border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .btn.primary:hover {
   background: var(--accent-light);
+  transform: translateY(-1px);
 }
 
 .topbar-btn {
@@ -505,4 +515,183 @@ tbody tr:hover {
   padding-right: 32px;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   dApp Kit ConnectModal — Editorial Luxury Overrides
+   
+   Geometry Standard:
+   - Outer modal shell:  16px radius (rounded-2xl)
+   - Inner elements:     8px radius  (rounded-lg)
+   - All borders:        1px solid rgba(0,0,0,0.08)
+   - Shadow:             Ultra-diffuse < 4% opacity
+   ═══════════════════════════════════════════════════════════════════ */
 
+/* --- Modal Overlay (Backdrop) --- */
+[data-dui="overlay"] {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* --- Modal Container (Outer Shell) --- */
+[data-dui="connect-modal-content"] {
+  border-radius: 20px !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15) !important;
+  background: rgba(250, 250, 249, 0.9) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  overflow: hidden !important;
+  font-family: var(--font) !important;
+  animation: modal-fade-in 0.3s ease-out !important;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Modal Header --- */
+[data-dui="connect-modal-header"] {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+  padding: 24px !important;
+  background: transparent !important;
+}
+
+[data-dui="connect-modal-header"] h2,
+[data-dui="connect-modal-header"] span {
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  color: #1a1a18 !important;
+  letter-spacing: -0.01em !important;
+  font-size: 1.125rem !important;
+}
+
+/* --- Wallet List Items --- */
+[data-dui="wallet-list-item"] {
+  padding: 12px 16px !important;
+  margin: 4px 12px !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+  background: transparent !important;
+}
+
+[data-dui="wallet-list-item"]:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-dui="wallet-list-item"] img {
+  border-radius: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+/* --- Close Button (Inside Modal) --- */
+[data-dui="connect-modal-close-button"] {
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: rgba(0, 0, 0, 0.4) !important;
+  width: 32px !important;
+  height: 32px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-dui="connect-modal-close-button"]:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(0, 0, 0, 0.8) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* --- Wallet List Items --- */
+[data-dui="wallet-list-item"] {
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  padding: 10px 12px !important;
+  margin: 0 8px 4px !important;
+  font-family: var(--font) !important;
+  font-weight: 600 !important;
+  font-size: 0.8125rem !important;
+  color: #1a1a18 !important;
+  background: rgba(0, 0, 0, 0.01) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-dui="wallet-list-item"]:hover {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-1px);
+}
+
+[data-dui="wallet-list-item"]:active {
+  transform: scale(0.98);
+}
+
+/* --- Wallet Icon (Inside list items) --- */
+[data-dui="wallet-icon"] {
+  border-radius: 6px !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+/* --- Body/Content Area --- */
+[data-dui="connect-modal-body"] {
+  padding: 8px 0 !important;
+  background: #ffffff !important;
+}
+
+/* --- Footer / Install Links --- */
+[data-dui="connect-modal-footer"] {
+  border-top: 1px solid rgba(0, 0, 0, 0.04) !important;
+  padding: 16px 24px !important;
+  background: #fafaf9 !important;
+}
+
+[data-dui="connect-modal-footer"] a,
+[data-dui="connect-modal-footer"] span {
+  font-family: var(--font) !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  color: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-dui="connect-modal-footer"] a:hover {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* --- QR Code Area (If shown) --- */
+[data-dui="qr-code-container"] {
+  border-radius: 12px !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding: 16px !important;
+  background: #fafaf9 !important;
+}
+
+/* --- What is a Wallet link --- */
+[data-dui="what-is-a-wallet"] {
+  font-family: var(--font) !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-dui="what-is-a-wallet"]:hover {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* --- Generic dapp-kit button overrides --- */
+[data-dui] button:not([data-dui="connect-modal-close-button"]) {
+  font-family: var(--font) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* --- Scrollbar inside modal --- */
+[data-dui="connect-modal-body"]::-webkit-scrollbar {
+  width: 4px;
+}
+[data-dui="connect-modal-body"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-dui="connect-modal-body"]::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+}

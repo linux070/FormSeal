@@ -8,6 +8,10 @@ import {
   List,
   X,
   Check,
+  SignOut,
+  CaretUpDown,
+  Globe,
+  Wallet,
 } from '@phosphor-icons/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -18,7 +22,7 @@ function cn(...inputs: ClassValue[]) {
 
 const NAV_LINKS = [
   { label: 'Templates', path: '/templates' },
-  { label: 'Form Builder', path: '/builder' },
+  { label: 'Form', path: '/builder' },
   { label: 'Dashboard', path: '/dashboard' },
 ];
 
@@ -27,8 +31,7 @@ export function Navbar() {
   const currentAccount = useCurrentAccount();
   const { mutate: disconnectWallet } = useDisconnectWallet();
   const { network, isConnecting, switchNetwork } = useWalletStore();
-  
-  // Real physical browser extension public coordinate acts as primary authority
+
   const activeAddress = currentAccount?.address || null;
   const [walletDropdownOpen, setWalletDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,7 +48,6 @@ export function Navbar() {
     setTimeout(() => setToastMessage(null), 2500);
   };
 
-  // Close dropdown on outside mousedown clicks
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -64,7 +66,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -81,15 +82,15 @@ export function Navbar() {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <img 
-              src="/formseal kit/formseal_header.svg" 
-              alt="FormSeal" 
-              className="h-12 w-auto" 
+            <img
+              src="/formseal kit/formseal_header.svg"
+              alt="FormSeal"
+              className="h-12 w-auto"
             />
           </Link>
 
           {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
@@ -102,60 +103,89 @@ export function Navbar() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4">
             {activeAddress ? (
               <div className="relative" ref={dropdownRef}>
+                {/* ─── Wallet Trigger Button ─── */}
                 <button
                   onClick={() => setWalletDropdownOpen(!walletDropdownOpen)}
-                  className="flex items-center gap-2 px-3.5 h-10 rounded-xl bg-[#f0eeeb] border border-black/10 hover:border-black/20 transition-all text-left shadow-sm"
+                  className={cn(
+                    "flex items-center gap-2.5 px-5 h-12 rounded-md transition-all text-left bg-white/60 backdrop-blur-md border border-black/[0.04]",
+                    "text-black hover:bg-white/80",
+                    "active:scale-[0.98]",
+                    walletDropdownOpen && "bg-white/80 shadow-sm"
+                  )}
                 >
-                  <span className="text-sm font-mono font-medium text-black tracking-tight">
+                  <span className="text-[0.875rem] font-mono font-normal tracking-tight">
                     {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
                   </span>
-                  <svg className="w-3.5 h-3.5 text-black/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M7 15L12 20L17 15M7 9L12 4L17 9" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <CaretUpDown weight="bold" className="w-4 h-4 opacity-20" />
                 </button>
 
+                {/* ─── Wallet Dropdown Modal ─── */}
                 <AnimatePresence>
                   {walletDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                      initial={{ opacity: 0, y: 6, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                      transition={{ duration: 0.15, ease: 'easeOut' }}
-                      className="absolute right-0 mt-2 w-56 bg-[#f0eeeb] rounded-xl shadow-xl border border-black/10 overflow-hidden z-50"
+                      exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                      transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute right-0 mt-2 w-[280px] bg-[#fafaf9]/90 backdrop-blur-xl rounded-xl border border-black/[0.05] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] overflow-hidden z-50 p-1"
                     >
-                      {/* Streamlined Network Selectors */}
-                      <div className="p-1.5 space-y-0.5 bg-[#f0eeeb]">
+                      {/* Account Section */}
+                      <div className="p-1">
+                        <div className="px-3 py-3 rounded-lg flex items-center gap-3 transition-colors hover:bg-black/[0.04] group cursor-pointer">
+                          <Check weight="bold" className="w-4 h-4 text-black/40" />
+                          <span className="text-[0.875rem] font-normal text-black/60 tracking-tight truncate">
+                            {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="h-px bg-black/[0.05] mx-[-4px] my-1" />
+
+                      {/* Network Selectors */}
+                      <div className="p-1 space-y-0.5">
                         <button
                           onClick={() => handleNetworkSwitchTrigger('Sui Testnet')}
                           className={cn(
-                            "w-full px-3 py-2.5 rounded-lg flex items-center justify-between text-left transition-all",
-                            network.includes('Testnet') ? "bg-black/[0.04] font-bold text-black" : "text-black/60 hover:text-black hover:bg-black/[0.02]"
+                            "w-full px-3 h-10 rounded-lg flex items-center justify-between text-left transition-all duration-200",
+                            network.includes('Testnet')
+                              ? "bg-black/[0.03] font-normal text-black"
+                              : "text-black/50 hover:bg-black/[0.02] hover:text-black"
                           )}
                         >
-                          <span className="text-xs tracking-wide">Testnet</span>
-                          {network.includes('Testnet') && <Check weight="bold" className="w-3.5 h-3.5 text-black" />}
+                          <div className="flex items-center gap-2.5">
+                            <Globe weight="bold" className="w-4 h-4 opacity-30" />
+                            <span className="text-[0.875rem] font-normal tracking-tight">Testnet</span>
+                          </div>
+                          {network.includes('Testnet') && <Check weight="bold" className="w-3.5 h-3.5 text-black/40" />}
                         </button>
 
                         <button
                           onClick={() => handleNetworkSwitchTrigger('Sui Mainnet')}
                           className={cn(
-                            "w-full px-3 py-2.5 rounded-lg flex items-center justify-between text-left transition-all",
-                            network.includes('Mainnet') ? "bg-black/[0.04] font-bold text-black" : "text-black/60 hover:text-black hover:bg-black/[0.02]"
+                            "w-full px-3 h-10 rounded-lg flex items-center justify-between text-left transition-all duration-200",
+                            network.includes('Mainnet')
+                              ? "bg-black/[0.03] font-normal text-black"
+                              : "text-black/50 hover:bg-black/[0.02] hover:text-black"
                           )}
                         >
-                          <span className="text-xs tracking-wide">Mainnet</span>
-                          {network.includes('Mainnet') && <Check weight="bold" className="w-3.5 h-3.5 text-black" />}
+                          <div className="flex items-center gap-2.5">
+                            <Globe weight="bold" className="w-4 h-4 opacity-30" />
+                            <span className="text-[0.875rem] font-normal tracking-tight">Mainnet</span>
+                          </div>
+                          {network.includes('Mainnet') && <Check weight="bold" className="w-3.5 h-3.5 text-black/40" />}
                         </button>
                       </div>
 
-                      {/* Integrated Flat Disconnect Bounding Card */}
-                      <div className="p-1.5 bg-[#f0eeeb] border-t border-black/[0.05]">
+                      <div className="h-px bg-black/[0.05] mx-[-4px] my-1" />
+
+                      {/* Disconnect */}
+                      <div className="p-1">
                         <button
                           onClick={() => { disconnectWallet(); setWalletDropdownOpen(false); }}
-                          className="w-full px-3 py-2 rounded-lg bg-transparent hover:bg-black/[0.05] transition-colors text-left text-xs font-medium text-black/70 border-none outline-none focus:outline-none"
+                          className="w-full px-3 h-10 rounded-lg flex items-center text-left text-[0.875rem] font-normal text-black/50 hover:bg-black/[0.03] transition-all duration-200"
                         >
                           Disconnect
                         </button>
@@ -164,18 +194,18 @@ export function Navbar() {
                   )}
                 </AnimatePresence>
 
-                {/* Studio-Grade Micro-Interaction Network Toast Notification */}
+                {/* Network Toast */}
                 <AnimatePresence>
                   {toastMessage && (
                     <motion.div
                       initial={{ opacity: 0, y: -8, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -8, scale: 0.96 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 top-12 z-[110] px-3.5 py-2 rounded-xl bg-[#f0eeeb] border border-black/10 shadow-md flex items-center gap-2 pointer-events-none w-max"
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute right-0 top-12 z-[110] px-3.5 py-2 rounded-lg bg-white border border-black/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex items-center gap-2 pointer-events-none w-max"
                     >
                       <Check weight="bold" className="w-3.5 h-3.5 text-black" />
-                      <span className="text-xs font-bold text-black tracking-wide">
+                      <span className="text-[0.75rem] font-bold text-black tracking-wide">
                         {toastMessage}
                       </span>
                     </motion.div>
@@ -185,14 +215,17 @@ export function Navbar() {
             ) : (
               <ConnectModal
                 trigger={
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    loading={isConnecting}
-                    className="rounded-full px-7 h-10 text-[0.875rem] font-bold bg-black text-white hover:bg-black/90 transition-all shadow-md shadow-black/10 tracking-wide"
+                  <button
+                    disabled={isConnecting}
+                    className={cn(
+                      "flex items-center gap-2.5 px-5 h-12 rounded-md transition-all text-left bg-white/60 backdrop-blur-md border border-black/[0.08]",
+                      "text-black hover:bg-white/80 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]",
+                      "active:scale-[0.98] disabled:opacity-50 w-full sm:w-auto"
+                    )}
                   >
-                    Connect Wallet
-                  </Button>
+                    <Wallet weight="bold" className="w-5 h-5 opacity-30" />
+                    <span className="text-[0.875rem] font-normal tracking-tight">Connect Wallet</span>
+                  </button>
                 }
               />
             )}
@@ -200,7 +233,7 @@ export function Navbar() {
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-xl bg-black/[0.04] flex items-center justify-center text-black"
+              className="lg:hidden w-10 h-10 rounded-lg bg-black/[0.04] flex items-center justify-center text-black active:scale-[0.97] transition-transform"
             >
               {mobileMenuOpen ? <X weight="bold" /> : <List weight="bold" />}
             </button>
@@ -215,41 +248,41 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="absolute top-full left-0 right-0 px-6 pt-2 lg:hidden"
           >
-            <div className="bg-white/80 backdrop-blur-xl border border-black/[0.08] shadow-2xl rounded-2xl p-4 space-y-2">
+            <div className="bg-white/95 backdrop-blur-xl border border-black/[0.08] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08)] rounded-2xl p-4 space-y-1">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   to={link.path}
-                  className="flex items-center justify-between p-4 rounded-xl text-lg font-bold text-black/60 hover:text-black hover:bg-black/[0.04] transition-all"
+                  className="flex items-center justify-between py-3 px-4 text-[1rem] font-medium text-black/60 hover:text-black transition-all active:scale-[0.98]"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-4 border-t border-black/[0.05] flex flex-col gap-2">
+              <div className="pt-3 border-t border-black/[0.05] flex flex-col gap-2">
                 {activeAddress ? (
-                  <div className="p-3 bg-black/[0.02] rounded-xl flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-black/60">
-                      {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
-                    </span>
-                    <button 
-                      onClick={() => { disconnectWallet(); setMobileMenuOpen(false); }}
-                      className="text-xs font-bold text-red-600 uppercase"
-                    >
-                      Disconnect
-                    </button>
+                  <div className="space-y-2">
+                    <div className="px-4 py-2 flex items-center justify-between">
+                      <span className="text-[0.75rem] font-mono font-bold text-black/60">
+                        {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
+                      </span>
+                      <button
+                        onClick={() => { disconnectWallet(); setMobileMenuOpen(false); }}
+                        className="flex items-center gap-1.5 text-[0.75rem] font-bold text-black/40 hover:text-black transition-colors"
+                      >
+                        <SignOut weight="bold" className="w-3 h-3" />
+                        Disconnect
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <ConnectModal
                     trigger={
-                      <Button
-                        variant="primary"
-                        className="w-full rounded-xl bg-black text-white h-11 text-sm font-bold tracking-wide"
-                      >
+                      <button className="text-[1rem] font-bold text-black/60 hover:text-black transition-colors px-4 py-4 w-full text-left">
                         Connect Wallet
-                      </Button>
+                      </button>
                     }
                   />
                 )}
@@ -261,4 +294,3 @@ export function Navbar() {
     </header>
   );
 }
-

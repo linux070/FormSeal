@@ -19,9 +19,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<string, string> = {
   primary:
-    'bg-accent text-white hover:brightness-105 shadow-[0_4px_12px_rgba(16,185,129,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]',
+    'bg-black text-white hover:bg-zinc-800 shadow-[0_2px_8px_rgba(0,0,0,0.12)] border border-black/[0.08]',
   secondary:
-    'bg-black/[0.03] text-text-primary border border-black/[0.05] hover:bg-black/[0.06]',
+    'bg-white text-black border border-black/[0.12] hover:border-black/20 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]',
   ghost:
     'bg-transparent text-text-secondary hover:text-text-primary hover:bg-black/[0.03]',
   danger:
@@ -29,9 +29,9 @@ const variantClasses: Record<string, string> = {
 };
 
 const sizeClasses: Record<string, string> = {
-  sm: 'px-4 py-2 text-[0.8125rem] gap-2',
-  md: 'px-5 py-3 text-[0.875rem] gap-2.5',
-  lg: 'px-8 py-4 text-[1rem] gap-3',
+  sm: 'px-4 h-9 text-[0.8125rem] gap-2',
+  md: 'px-6 h-12 text-[0.875rem] gap-2.5',
+  lg: 'px-10 h-14 text-[1rem] gap-3',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -52,10 +52,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || loading}
       className={cn(
-        'inline-flex items-center justify-center font-bold',
-        'rounded-2xl transition-all duration-300',
+        'group inline-flex items-center justify-center font-semibold',
+        'rounded-md transition-all duration-300', // rounded-md is 12px in index.css
         'ease-[var(--ease-out-expo)] select-none',
-        'active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed',
+        'active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed',
         variantClasses[variant],
         sizeClasses[size],
         className
@@ -63,11 +63,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       {...props}
     >
       {loading ? (
-        <CircleNotch weight="bold" className="w-4 h-4 animate-spin" />
+        <CircleNotch weight="bold" className="w-5 h-5 animate-spin" />
       ) : icon ? (
-        <span className="flex-shrink-0 transition-transform group-hover:scale-110">{icon}</span>
+        <span className="flex-shrink-0 transition-all duration-300 group-hover:scale-110 flex items-center justify-center">
+          {icon}
+        </span>
       ) : null}
-      {children}
+      <span className="relative">{children}</span>
     </button>
   )
 );
@@ -98,18 +100,18 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full px-4 py-3 bg-black/[0.03] text-text-primary',
-              'border border-black/[0.08] rounded-xl',
-              'text-[1rem] placeholder:text-text-muted/70 placeholder:transition-all placeholder:duration-300',
+              'w-full px-4 py-3 bg-white text-text-primary',
+              'border border-black/[0.08] rounded-md',
+              'text-[1rem] placeholder:text-text-muted/50 placeholder:transition-all placeholder:duration-300',
               'transition-all duration-300 ease-[var(--ease-out-expo)]',
-              'focus:border-accent/40 focus:bg-white',
-              'focus:outline-none',
+              'focus:border-black/20 focus:bg-white',
+              'focus:outline-none focus:ring-1 focus:ring-black/5',
               error ? 'border-danger focus:border-danger focus:ring-danger/5' : '',
               className
             )}
             {...props}
           />
-          <div className="absolute inset-0 rounded-xl pointer-events-none border border-black/[0.05] opacity-0 group-focus-within:opacity-100 transition-opacity" />
+          <div className="absolute inset-0 rounded-md pointer-events-none border border-black/[0.05] opacity-0 group-focus-within:opacity-100 transition-opacity" />
         </div>
         {error ? (
           <div className="flex items-center gap-1.5 text-[0.75rem] text-danger font-medium animate-fade-in">
@@ -152,12 +154,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            'w-full px-4 py-3 bg-black/[0.01] text-text-primary',
-            'border border-black/[0.08] rounded-xl',
+            'w-full px-4 py-3 bg-white text-text-primary',
+            'border border-black/[0.08] rounded-md',
             'text-[1rem] placeholder:text-text-muted/40 placeholder:transition-all placeholder:duration-300',
             'transition-all duration-300 ease-[var(--ease-out-expo)]',
-            'focus:border-accent focus:bg-white',
-            'focus:outline-none',
+            'focus:border-black/20 focus:bg-white',
+            'focus:outline-none focus:ring-1 focus:ring-black/5',
             'resize-y min-h-[120px]',
             error ? 'border-danger focus:border-danger focus:ring-danger/5' : '',
             className
@@ -254,7 +256,7 @@ export function Badge({ children, variant = 'default', size = 'sm', className = 
   return (
     <span
       className={cn(
-        'inline-flex items-center font-bold border rounded-lg uppercase tracking-widest transition-all duration-300',
+        'inline-flex items-center font-bold border rounded-md uppercase tracking-widest transition-all duration-300',
         'shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]',
         badgeVariants[variant],
         size === 'sm' ? 'px-2 py-0.5 text-[0.625rem]' : 'px-3 py-1 text-[0.6875rem]',
@@ -271,7 +273,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
   return (
     <div
       className={cn(
-        'bg-black/[0.03] rounded-xl overflow-hidden relative',
+        'bg-black/[0.03] rounded-md overflow-hidden relative',
         'after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/[0.2] after:to-transparent after:animate-shimmer',
         className
       )}
@@ -305,12 +307,30 @@ export function EmptyState({ icon, title, description, action }: {
 }
 
 /* ─── Modal ─── */
-export function Modal({ open, onClose, title, children }: {
+export function Modal({ 
+  open, 
+  onClose, 
+  title, 
+  children,
+  size = 'md'
+}: {
   open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '6xl' | 'full';
 }) {
+  const sizeClasses = {
+    sm: 'max-w-md',
+    md: 'max-w-xl',
+    lg: 'max-w-3xl',
+    xl: 'max-w-5xl',
+    '2xl': 'max-w-2xl',
+    '4xl': 'max-w-4xl',
+    '6xl': 'max-w-6xl',
+    full: 'max-w-[95vw]'
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -327,21 +347,24 @@ export function Modal({ open, onClose, title, children }: {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.98, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-xl bg-[#fafafa] rounded-[2rem] border border-black/10 shadow-2xl overflow-hidden h-fit"
+            exit={{ opacity: 0, scale: 0.98, y: 10 }}
+            className={cn(
+              "relative w-full bg-white rounded-md border border-black/10 shadow-2xl overflow-hidden h-fit",
+              sizeClasses[size]
+            )}
           >
-            <div className="flex items-center justify-between px-8 py-6 border-b border-black/[0.05] bg-white">
-              <h2 className="text-xl font-bold text-text-primary tracking-tight">{title}</h2>
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/[0.05] bg-white">
+              <h2 className="text-lg font-bold text-text-primary tracking-tight">{title}</h2>
               <button
                 onClick={onClose}
-                className="w-10 h-10 rounded-xl bg-black/[0.04] flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+                className="w-8 h-8 rounded-md bg-black/[0.04] flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
               >
                 <X_SVG />
               </button>
             </div>
-            <div className="px-8 py-3">{children}</div>
+            <div className="px-6 py-6">{children}</div>
           </motion.div>
         </div>
       )}
@@ -360,7 +383,7 @@ export function InfoTooltip({ content }: { content: string }) {
   return (
     <div className="relative group inline-flex ml-1">
       <Info weight="bold" className="w-3.5 h-3.5 text-text-muted hover:text-accent transition-colors cursor-help" />
-      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-3 bg-white border border-black/[0.1] rounded-xl text-[0.75rem] text-text-secondary w-64 text-center opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 shadow-xl z-[300]">
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-3 bg-white border border-black/[0.1] rounded-lg text-[0.75rem] text-text-secondary w-64 text-center opacity-0 pointer-events-none group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 shadow-xl z-[300]">
         {content}
         <div className="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-white" />
       </div>

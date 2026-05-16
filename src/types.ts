@@ -36,6 +36,10 @@ export interface FormSchema {
   creatorAddress: string;
   createdAt: number;
   version: number;
+  hasCover?: boolean;
+  coverUrl?: string;
+  logoUrl?: string;
+  showIcon?: boolean;
 }
 
 /* ─── Submission ─── */

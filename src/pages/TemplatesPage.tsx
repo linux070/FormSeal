@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useBuilderStore } from '@/stores/builderStore';
 
+
 const TEMPLATES = [
   {
     id: 'bug_report',
@@ -179,7 +180,7 @@ export function TemplatesPage() {
             <div className="flex flex-col items-center justify-center gap-8 z-10">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-[1.25rem] font-bold text-black">Blank form</h3>
-                <p className="text-[0.8125rem] font-medium text-black/50">Create new form from scratch</p>
+                <p className="text-[0.8125rem] font-medium text-black/50">Create a new form from scratch</p>
               </div>
 
               <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center shadow-2xl shadow-black/20 group-hover:bg-zinc-800 transition-all duration-500 group-hover:scale-105 border border-transparent">

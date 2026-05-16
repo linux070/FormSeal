@@ -3,143 +3,82 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { Button, cn, ProtocolAttribution } from '@/components/ui';
 import {
-  Lock,
-  Globe,
-  Fingerprint,
-  HardDrive,
-  Plus,
-  Trash,
-  DotsSixVertical,
-  CaretDown,
-  TextAlignLeft,
+  Check,
   CheckSquare,
   ListBullets,
+  Star,
+  Plus,
+  DotsSixVertical,
+  TextAlignLeft,
+  CaretDown,
+  CursorClick,
+  Cube,
+  LockKey,
 } from '@phosphor-icons/react';
+import { Footer } from '@/components/Footer';
 
 // ─── Constants & Data ───
 
-const BENTO_FEATURES = [
+const SITE_STEPS = [
   {
-    title: 'Walrus Permanent Storage',
-    description: 'Forms are stored as immutable artifacts on the Walrus decentralized network. No servers, no central databases, no risk of data loss or arbitrary deletion.',
-    icon: HardDrive,
-    tag: 'Immutable Storage',
-    num: '01',
+    title: 'Drag & drop form builder',
+    description: "The easiest way to create a custom form. Simply drag and drop a form field from the menu, and that's it.",
+    icon: CursorClick,
   },
   {
-    title: 'Seal Cryptography',
-    description: 'End-to-end encryption integrated natively via the Seal SDK. Your respondent submissions are safeguarded by advanced threshold encryption before leaving the browser.',
-    icon: Lock,
-    tag: 'Threshold Encryption',
-    num: '02',
+    title: 'Store it forever',
+    description: "Your forms and responses are saved as permanent blobs on Walrus, ensuring they never disappear or get deleted.",
+    icon: Cube,
   },
   {
-    title: 'Sui-Native Identity',
-    description: 'Your Web3 wallet functions as your un-phishable admin credentials. Retain absolute permissionless ownership and access control over every form you deploy.',
-    icon: Fingerprint,
-    tag: 'Self-Sovereign Auth',
-    num: '03',
-  },
-  {
-    title: 'Zero-Infra Deployment',
-    description: 'Publish forms instantly to the global decentralized web with a single interaction. Direct protocol-level object mapping guaranteeing permanent verifiable uptime.',
-    icon: Globe,
-    tag: 'Protocol Routing',
-    num: '04',
+    title: 'Keep it private',
+    description: "Protect sensitive respondent data with Seal threshold cryptography. Only you hold the keys to decrypt submissions.",
+    icon: LockKey,
   },
 ];
 
-// ─── Interactive Hero Components ───
-
 type HeroField = {
   id: string;
-  type: 'multiple' | 'open' | 'dropdown';
+  type: 'multiple' | 'open' | 'dropdown' | 'rating';
   question: string;
   placeholder?: string;
   answer?: string;
   choices?: { id: string; text: string; checked: boolean }[];
+  rating?: number;
 };
+
+const HERO_TEMPLATES: HeroField[] = [
+  {
+    id: 'template_multiple',
+    type: 'multiple',
+    question: 'How did you find out about FormSeal?',
+    choices: [
+      { id: 'tc2', text: 'Instagram', checked: false },
+      { id: 'tc1', text: 'Twitter', checked: true },
+      { id: 'tc3', text: 'Telegram', checked: false },
+    ],
+  },
+  {
+    id: 'template_rating',
+    type: 'rating',
+    question: 'Rate your experience?',
+    rating: 4,
+  },
+];
 
 function HeroInteractiveForms() {
   const [fields, setFields] = useState<HeroField[]>([]);
 
   const addTemplates = () => {
-    const f1: HeroField = {
-      id: 'template_multiple',
-      type: 'multiple',
-      question: 'How did you find out about FormSeal?',
-      choices: [
-        { id: 'tc1', text: 'Twitter', checked: false },
-        { id: 'tc2', text: 'Instagram', checked: true },
-        { id: 'tc3', text: 'Telegram', checked: false },
-      ],
-    };
-    const f2: HeroField = {
-      id: 'template_open',
-      type: 'open',
-      question: 'What is your occupation?',
-      placeholder: 'Developer',
-      answer: '',
-    };
-    setFields([f1, f2]);
-  };
-
-  const deleteField = (id: string) => {
-    setFields(fields.filter(f => f.id !== id));
-  };
-
-  const updateQuestion = (id: string, text: string) => {
-    setFields(fields.map(f => f.id === id ? { ...f, question: text } : f));
-  };
-
-
-
-  const updateAnswer = (id: string, text: string) => {
-    setFields(fields.map(f => f.id === id ? { ...f, answer: text } : f));
-  };
-
-  const updateChoiceText = (fieldId: string, choiceId: string, text: string) => {
-    setFields(fields.map(f => {
-      if (f.id === fieldId && f.choices) {
-        return {
-          ...f,
-          choices: f.choices.map(c => c.id === choiceId ? { ...c, text } : c)
-        };
-      }
-      return f;
-    }));
-  };
-
-  const toggleChoice = (fieldId: string, choiceId: string) => {
-    setFields(fields.map(f => {
-      if (f.id === fieldId && f.choices) {
-        return {
-          ...f,
-          choices: f.choices.map(c => c.id === choiceId ? { ...c, checked: !c.checked } : c)
-        };
-      }
-      return f;
-    }));
-  };
-
-  const deleteChoice = (fieldId: string, choiceId: string) => {
-    setFields(fields.map(f => {
-      if (f.id === fieldId && f.choices) {
-        return {
-          ...f,
-          choices: f.choices.filter(c => c.id !== choiceId)
-        };
-      }
-      return f;
-    }));
+    setFields(HERO_TEMPLATES);
   };
 
   const reorderChoices = (fieldId: string, newChoices: any[]) => {
-    setFields(fields.map(f => f.id === fieldId ? { ...f, choices: newChoices } : f));
+    setFields(prev => prev.map(f => f.id === fieldId ? { ...f, choices: newChoices } : f));
   };
 
   return (
-    <div className="relative w-full max-w-[540px] mx-auto lg:ml-auto min-h-[600px]">
+    <div className="relative w-full max-w-[520px] mx-auto lg:ml-auto min-h-[600px]">
       <div className="relative">
         <AnimatePresence mode="popLayout">
           {fields.map((field, idx) => (
@@ -152,60 +91,46 @@ function HeroInteractiveForms() {
                 scale: 1,
                 y: 0,
                 zIndex: fields.length - idx,
-                marginTop: idx === 0 ? 0 : -50,
-                marginLeft: idx % 2 === 0 ? 0 : 30,
-                marginRight: idx % 2 === 0 ? 30 : 0,
+                marginTop: idx === 0 ? 0 : -40,
+                marginLeft: idx % 2 === 0 ? 0 : 20,
+                marginRight: idx % 2 === 0 ? 20 : 0,
               }}
-              exit={{ opacity: 0, scale: 0.8, x: 100 }}
+              exit={{ opacity: 0, scale: 0.8, x: 50 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="relative"
             >
-              <div className={cn(
-                "bg-white rounded-3xl border border-black/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]",
-                (field.type === 'multiple' || field.type === 'dropdown') ? "p-6" : "p-6 md:p-8"
-              )}>
-                <div className={cn(
-                  "flex items-center justify-between",
-                  (field.type === 'multiple' || field.type === 'dropdown') ? "mb-6" : "mb-8"
-                )}>
+              <div className="bg-white rounded-xl border border-black/[0.04] shadow-[0_12px_32px_-4px_rgba(0,0,0,0.04),0_2px_4px_-1px_rgba(0,0,0,0.02)] p-10 transition-all duration-500 hover:shadow-[0_24px_48px_-8px_rgba(0,0,0,0.08)]">
+                <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-black/[0.03] flex items-center justify-center">
                       {field.type === 'multiple' ? (
                         <CheckSquare weight="bold" className="w-5 h-5 text-black/40" />
                       ) : field.type === 'dropdown' ? (
                         <ListBullets weight="bold" className="w-5 h-5 text-black/40" />
+                      ) : field.type === 'rating' ? (
+                        <Star weight="bold" className="w-5 h-5 text-amber-500" />
                       ) : (
                         <TextAlignLeft weight="bold" className="w-5 h-5 text-black/40" />
                       )}
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-black/[0.05] bg-black/[0.01]">
-                      <span className="text-[0.75rem] font-bold text-black/60">
-                        {field.type === 'multiple' ? 'Multiple choice' : field.type === 'dropdown' ? 'Dropdown' : 'Open question'}
+                    <div className="px-3 py-1.5 rounded-md border border-black/[0.05] bg-black/[0.01]">
+                      <span className="text-[0.625rem] font-bold text-black/30 uppercase tracking-[0.2em]">
+                        {field.type.replace('_', ' ')}
                       </span>
-                      <CaretDown weight="bold" className="w-3 h-3 text-black/20" />
                     </div>
                   </div>
-                  <button
-                    onClick={() => deleteField(field.id)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-black/10 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90"
-                  >
-                    <Trash weight="bold" className="w-4 h-4" />
-                  </button>
                 </div>
 
-                <div className={cn(
-                  "space-y-6",
-                  (field.type === 'multiple' || field.type === 'dropdown') && "space-y-4"
-                )}>
-                  <input
-                    value={field.question}
-                    onChange={(e) => updateQuestion(field.id, e.target.value)}
-                    className="text-[1.125rem] font-semibold text-black tracking-tight w-full bg-transparent border-none focus:outline-none placeholder:text-black/10"
-                    placeholder="Enter question..."
-                  />
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <DotsSixVertical className="w-5 h-5 mt-1 text-black/10 flex-shrink-0 cursor-grab" />
+                    <h3 className="text-[1.125rem] font-medium text-black leading-tight tracking-tight">
+                      {field.question}
+                    </h3>
+                  </div>
 
-                  {field.type === 'multiple' && field.choices && (
-                    <div className="space-y-2">
+                  <div className="pl-9">
+                    {field.type === 'multiple' && field.choices && (
                       <Reorder.Group
                         axis="y"
                         values={field.choices}
@@ -216,89 +141,57 @@ function HeroInteractiveForms() {
                           <Reorder.Item
                             key={choice.id}
                             value={choice}
-                            className="flex items-center gap-3 group"
+                            className="flex items-center gap-3 p-3 rounded-xl border border-black/[0.04] bg-[#fafafa] group cursor-default"
                           >
-                            <div className="cursor-grab active:cursor-grabbing text-black/10 group-hover:text-black/30 transition-colors">
-                              <DotsSixVertical weight="bold" className="w-4 h-4" />
-                            </div>
                             <div className={cn(
-                              "flex-1 flex items-center gap-3 p-3.5 rounded-2xl border transition-all",
-                              choice.checked ? "bg-black/[0.03] border-black/10 shadow-sm" : "bg-black/[0.01] border-black/[0.04] group-hover:border-black/10"
+                              "w-5 h-5 rounded-lg border flex items-center justify-center transition-all duration-300",
+                              choice.checked ? "bg-black border-black text-white" : "border-black/10 bg-white"
                             )}>
-                              <button
-                                onClick={() => toggleChoice(field.id, choice.id)}
+                              <Check 
+                                weight="bold" 
                                 className={cn(
-                                  "w-5 h-5 rounded border-2 transition-all flex items-center justify-center",
-                                  choice.checked ? "bg-black border-black" : "border-black/10 hover:border-black/30"
-                                )}
-                              >
-                                {choice.checked && (
-                                  <motion.svg
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className="w-3 h-3 text-white stroke-[4]"
-                                    stroke="currentColor"
-                                  >
-                                    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                                  </motion.svg>
-                                )}
-                              </button>
-                              <input
-                                value={choice.text}
-                                onChange={(e) => updateChoiceText(field.id, choice.id, e.target.value)}
-                                className="bg-transparent border-none focus:outline-none text-[0.875rem] font-bold text-black/60 w-full"
+                                  "w-3.5 h-3.5 transition-opacity",
+                                  choice.checked ? "opacity-100" : "opacity-[0.03] group-hover:opacity-10"
+                                )} 
                               />
-                              <button
-                                onClick={() => deleteChoice(field.id, choice.id)}
-                                className="w-6 h-6 rounded-md flex items-center justify-center text-black/0 group-hover:text-black/20 hover:text-red-400 transition-all"
-                              >
-                                <Trash weight="bold" className="w-3.5 h-3.5" />
-                              </button>
                             </div>
+                            <span className={cn(
+                              "text-[0.875rem] font-medium transition-colors",
+                              choice.checked ? "text-black" : "text-black/40"
+                            )}>{choice.text}</span>
                           </Reorder.Item>
                         ))}
                       </Reorder.Group>
+                    )}
 
-                      <button
-                        onClick={() => {
-                          const newChoice = { id: Math.random().toString(36).substr(2, 9), text: 'New Option', checked: false };
-                          reorderChoices(field.id, [...field.choices!, newChoice]);
-                        }}
-                        className="flex items-center gap-2 px-4 py-2 text-[0.75rem] font-bold text-black/30 hover:text-black transition-colors pt-2"
-                      >
-                        <Plus weight="bold" className="w-3.5 h-3.5" />
-                        Add choice
-                      </button>
-                    </div>
-                  )}
+                    {field.type === 'rating' && (
+                      <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            className="transition-transform active:scale-90 p-1"
+                          >
+                            <Star
+                              weight={star <= (field.rating || 0) ? "fill" : "bold"}
+                              className={cn(
+                                "w-7 h-7 transition-colors",
+                                star <= (field.rating || 0) ? "text-amber-500" : "text-black/[0.03]"
+                              )}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
 
-                  {field.type === 'dropdown' && field.choices && (
-                    <div className="space-y-4">
-                      <HeroDropdownPreview
-                        choices={field.choices}
-                        onToggle={(choiceId) => toggleChoice(field.id, choiceId)}
-                        onUpdateText={(choiceId, text) => updateChoiceText(field.id, choiceId, text)}
-                        onDelete={(choiceId) => deleteChoice(field.id, choiceId)}
-                        onAdd={() => {
-                          const newChoice = { id: Math.random().toString(36).substr(2, 9), text: 'New Option', checked: false };
-                          reorderChoices(field.id, [...field.choices!, newChoice]);
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {field.type === 'open' && (
-                    <div className="p-4 rounded-2xl bg-black/[0.01] border border-black/[0.04] focus-within:border-black/10 transition-all">
-                      <input
-                        value={field.answer || ''}
-                        onChange={(e) => updateAnswer(field.id, e.target.value)}
-                        placeholder={field.placeholder || 'Type here...'}
-                        className="bg-transparent border-none focus:outline-none text-[0.875rem] font-medium text-black/60 w-full placeholder:text-black/20"
-                      />
-                    </div>
-                  )}
+                    {field.type === 'dropdown' && (
+                      <div className="relative">
+                        <div className="w-full px-4 h-14 rounded-xl border border-black/[0.05] bg-[#fafafa] flex items-center justify-between">
+                          <span className="text-[0.875rem] font-medium text-black/30">Select an option...</span>
+                          <CaretDown weight="bold" className="w-4 h-4 text-black/20" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -307,30 +200,36 @@ function HeroInteractiveForms() {
 
         {fields.length === 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center py-24 border-2 border-dashed border-black/5 rounded-[2.5rem] bg-black/[0.01]"
+            className="w-full bg-[#f3f2f0] rounded-2xl border-2 border-dashed border-black/[0.05] p-12 text-center flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden"
           >
-            <div className="w-16 h-16 rounded-3xl bg-white border border-black/5 flex items-center justify-center mb-8 shadow-sm">
+            {/* Soft Ambient Light */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-40 bg-white/40 blur-3xl pointer-events-none" />
+            
+            {/* Logo Tile */}
+            <div className="w-20 h-20 rounded-md bg-white shadow-[0_8px_24px_-4px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] border border-black/[0.03] flex items-center justify-center mb-8 relative group transition-transform duration-500 hover:scale-110">
+              <div className="absolute inset-0 bg-gradient-to-br from-black/[0.01] to-transparent rounded-md" />
               <img 
                 src="/formseal kit/formseal_logo.svg" 
                 alt="FormSeal" 
-                className="w-10 h-10 opacity-20" 
+                className="w-10 h-10 relative z-10 opacity-20 transition-opacity group-hover:opacity-40 duration-500" 
               />
             </div>
-
-            <div className="text-center mb-10">
-              <h3 className="text-[1.125rem] font-black text-black/40 tracking-tight">Workspace Empty</h3>
-              <p className="text-[0.75rem] font-bold text-black/20 mt-1">Add a field to begin interacting.</p>
-            </div>
-
-            <button
+            
+            <h3 className="text-[1.25rem] font-semibold text-black/60 mb-1 tracking-tight">Workspace Empty</h3>
+            <p className="text-[0.9375rem] text-black/25 font-medium mb-10">
+              Add a field to begin interacting.
+            </p>
+            
+            <Button
+              variant="secondary"
               onClick={addTemplates}
-              className="group flex items-center gap-3 px-8 py-4 rounded-2xl bg-white border border-black/5 shadow-sm text-[0.9375rem] font-semibold text-black/60 hover:text-black hover:scale-105 hover:shadow-xl hover:border-black/10 active:scale-95 transition-all duration-300"
+              icon={<Plus weight="bold" className="w-4 h-4" />}
+              className="px-10 h-14 !bg-[#e6e5e0] !border-none !text-black/40 hover:!bg-[#dfded9] hover:!text-black/60 transition-all shadow-none"
             >
-              <Plus weight="bold" className="w-4 h-4 text-black/20 group-hover:text-black transition-colors" />
               Add Item
-            </button>
+            </Button>
           </motion.div>
         )}
       </div>
@@ -338,288 +237,95 @@ function HeroInteractiveForms() {
   );
 }
 
-function HeroDropdownPreview({
-  choices,
-  onToggle,
-  onUpdateText,
-  onDelete,
-  onAdd
-}: {
-  choices: { id: string; text: string; checked: boolean }[];
-  onToggle: (id: string) => void;
-  onUpdateText: (id: string, text: string) => void;
-  onDelete: (id: string) => void;
-  onAdd: () => void;
-}) {
-  const selectedChoice = choices.find(c => c.checked);
-
-  return (
-    <div className="space-y-4">
-      {/* Dropdown Options (The menu) */}
-      <div className="bg-white border border-black/[0.08] rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-        <div className="py-2">
-          {choices.map((choice) => (
-            <div
-              key={choice.id}
-              className={`
-                w-full px-5 py-3 flex items-center justify-between group transition-colors
-                ${choice.checked ? 'bg-black/[0.02]' : 'hover:bg-black/[0.01]'}
-              `}
-            >
-              <input
-                value={choice.text}
-                onChange={(e) => onUpdateText(choice.id, e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-                className={cn(
-                  "bg-transparent border-none focus:outline-none text-[0.9375rem] font-medium transition-all w-full",
-                  choice.checked ? "text-black" : "text-black/40"
-                )}
-              />
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => onToggle(choice.id)}
-                  className={cn(
-                    "w-5 h-5 rounded-full border flex items-center justify-center transition-all",
-                    choice.checked ? "bg-black border-black" : "border-black/10 hover:border-black/30"
-                  )}
-                >
-                  {choice.checked && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                </button>
-                <button
-                  onClick={() => onDelete(choice.id)}
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-black/0 group-hover:text-black/10 hover:!text-red-400 transition-all"
-                >
-                  <Trash weight="bold" className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={onAdd}
-            className="w-full px-5 py-3 flex items-center gap-2 text-[0.75rem] font-bold text-black/20 hover:text-black transition-colors"
-          >
-            <Plus weight="bold" className="w-3 h-3" />
-            Add option
-          </button>
-        </div>
-      </div>
-
-      {/* The Selector (The trigger) */}
-      <div
-        className="w-full px-5 h-[54px] bg-black/[0.01] border border-black/5 rounded-xl flex items-center justify-between opacity-50 cursor-not-allowed"
-      >
-        <div className="flex items-center gap-3">
-          <ListBullets weight="bold" className="w-4 h-4 text-black/20" />
-          <span className="text-[0.9375rem] font-medium text-black/20">
-            {selectedChoice?.text || 'Select an option...'}
-          </span>
-        </div>
-        <CaretDown weight="bold" className="w-4 h-4 text-black/20" />
-      </div>
-    </div>
-  );
-}
-
-// ─── Layout Components ───
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.span
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/[0.03] border border-black/[0.05] text-[0.625rem] font-black uppercase tracking-[0.3em] text-text-muted mb-8"
-    >
-      <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-      {children}
-    </motion.span>
-  );
-}
-
 export function LandingPage() {
-
-
   return (
-    <div className="relative">
-      {/* Background - Pure Black/White Style */}
-      <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#f0eeeb]">
-        <div className="noise" />
-      </div>
-
+    <div className="flex-1 bg-[#fcfaf7] min-h-screen relative overflow-x-hidden selection:bg-black selection:text-white">
       {/* ─── Hero Section ─── */}
-      <section className="relative min-h-[100dvh] flex flex-col justify-center pt-32 pb-20 px-6 md:px-12 lg:px-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-20 lg:gap-32 items-center"
-        >
-          {/* Left: Copy */}
-          <div className="relative z-10">
-            <h1 className="text-[clamp(2.5rem,6vw,4rem)] font-black leading-[1.05] tracking-[-0.03em] text-black mb-10">
-              Decentralized Forms<br />
-              <span className="text-black/30 italic">
-                on Walrus.
-              </span>
-            </h1>
+      <section className="px-6 md:px-12 pt-40 pb-32 relative">
+        {/* Ambient Decorative Elements */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-black/[0.02] to-transparent rounded-full blur-[120px] -mr-96 -mt-96 pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-black/[0.01] to-transparent rounded-full blur-[100px] -ml-72 -mb-72 pointer-events-none" />
 
-            <p className="text-[1.125rem] md:text-[1.25rem] text-text-secondary leading-relaxed max-w-[40ch] mb-10 font-medium tracking-tight">
-              FormSeal eliminates the middleman. Submissions are stored as immutable blobs on Walrus, protected by Seal threshold cryptography.
-            </p>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-12 items-center">
+            {/* Left Column: Copy */}
+            <div className="text-center lg:text-left relative z-10 animate-fade-in">
+              <h1 className="text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] font-black tracking-tighter text-black leading-[0.9] mb-10">
+                Forms that<br />
+                live forever<br />
+                <span className="text-black/20 italic font-serif pr-2">
+                  on Walrus.
+                </span>
+              </h1>
 
-            <div className="flex flex-col items-center lg:items-start gap-12">
-              <div className="inline-flex flex-col items-center gap-4">
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+              <p className="text-[1.125rem] md:text-[1.25rem] text-black/50 leading-relaxed max-w-[55ch] mb-10 font-medium tracking-tight">
+                Design beautiful forms and collect responses with total privacy. Every submission is encrypted and stored permanently on Walrus, giving you complete ownership of your data forever.
+              </p>
+
+              <div className="flex flex-col items-center lg:items-start gap-8">
+                <div className="flex flex-col sm:flex-row items-center gap-3">
                   <Link to="/builder" className="w-full sm:w-auto">
                     <Button
                       variant="primary"
-                      className="h-12 px-10 rounded-full text-[0.875rem] font-bold transition-all !bg-black !text-white hover:scale-105 active:scale-95 shadow-xl shadow-black/10"
+                      className="w-full sm:w-auto px-10 h-14"
                     >
                       Create Form
                     </Button>
                   </Link>
                   <Link to="/dashboard" className="w-full sm:w-auto">
                     <Button
-                      variant="ghost"
-                      className="h-12 px-10 rounded-full text-[0.875rem] font-bold border border-black/[0.08] hover:bg-white hover:border-black/20 transition-all duration-300"
+                      variant="secondary"
+                      className="w-full sm:w-auto px-10 h-14 !bg-[#e6e5e0] !border-none !text-black/40 hover:!bg-[#dfded9] hover:!text-black/60 transition-all shadow-none"
                     >
-                      Dashboard
+                      View Dashboard
                     </Button>
                   </Link>
                 </div>
-
-                <ProtocolAttribution compact />
               </div>
             </div>
-          </div>
 
-          {/* Right: Interactive Forms */}
-          <div className="relative">
-            <HeroInteractiveForms />
+            {/* Right Column: Interactive Workspace */}
+            <div className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <HeroInteractiveForms />
+            </div>
           </div>
-        </motion.div>
-
+        </div>
       </section>
 
-
-
-      {/* ─── Protocol Primitives Grid ─── */}
-      <section className="px-6 md:px-12 lg:px-20 py-32 bg-transparent relative border-t border-black/[0.03]">
+      {/* ─── Site Steps ─── */}
+      <section className="px-6 md:px-12 py-40 border-t border-black/[0.03] bg-white">
         <div className="max-w-[1400px] mx-auto">
-          <div className="mb-20 text-center">
-            <SectionLabel>Protocol Primitives</SectionLabel>
-            <h2 className="text-[clamp(2rem,5vw,3rem)] font-black text-black tracking-tight leading-[1.1] max-w-2xl mx-auto">
-              Sovereignty as a Service.
-            </h2>
-            <p className="text-text-secondary text-[1.125rem] mt-4 max-w-xl mx-auto font-medium">
-              Enterprise-grade form primitives architected for maximum absolute persistence, transparent routing, and native user agency.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {BENTO_FEATURES.map((f, i) => {
-              const Icon = f.icon;
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24">
+            {SITE_STEPS.map((step, i) => {
+              const Icon = step.icon;
               return (
-                <motion.div
-                  key={f.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  viewport={{ once: true }}
-                  className="doppelrand group hover:scale-[1.01] transition-all duration-500"
-                >
-                  <div className="doppelrand-inner bg-white p-8 md:p-10 flex flex-col h-full justify-between min-h-[280px]">
-                    <div>
-                      {/* Top Bar: Icon + Primitive Index */}
-                      <div className="flex items-center justify-between mb-8">
-                        <div className="w-14 h-14 rounded-2xl bg-black/[0.02] border border-black/[0.05] flex items-center justify-center group-hover:bg-black group-hover:border-black/20 transition-all duration-300 shadow-sm">
-                          <Icon weight="bold" className="w-7 h-7 text-black/40 group-hover:text-white transition-colors" />
-                        </div>
-                        <span className="text-[0.75rem] font-mono font-bold text-text-tertiary tracking-widest px-3 py-1 rounded-full bg-black/[0.02] border border-black/[0.04]">
-                          PRIMITIVE // {f.num}
-                        </span>
-                      </div>
-
-                      {/* Core Content */}
-                      <h3 className="text-[1.375rem] font-extrabold text-black mb-3 tracking-tight group-hover:text-black transition-colors">
-                        {f.title}
-                      </h3>
-                      <p className="text-text-secondary text-[1.05rem] leading-relaxed font-medium">
-                        {f.description}
-                      </p>
-                    </div>
-
-                    {/* Interactive Footer Indicator */}
-                    <div className="mt-8 pt-5 border-t border-black/[0.04] flex items-center justify-between">
-                      <span className="flex items-center gap-2 text-[0.8125rem] font-bold text-text-muted">
-                        <span className="w-2 h-2 rounded-full bg-black/20 group-hover:bg-black transition-colors" />
-                        {f.tag}
-                      </span>
-                      <span className="text-[0.8125rem] font-bold text-black/0 group-hover:text-black transition-all transform translate-x-[-4px] group-hover:translate-x-0 inline-flex items-center gap-1">
-                        Active Layer →
-                      </span>
-                    </div>
+                <div key={i} className="flex flex-col gap-8 animate-fade-in" style={{ animationDelay: `${i * 150}ms` }}>
+                  <div className="w-16 h-16 rounded-2xl bg-black/[0.02] border border-black/[0.05] flex items-center justify-center">
+                    <Icon weight="bold" className="w-7 h-7 text-black/30" />
                   </div>
-                </motion.div>
+                  <div>
+                    <h3 className="text-[1.75rem] font-black tracking-tight text-black mb-4 leading-tight">
+                      {step.title}
+                    </h3>
+                    <p className="text-[1.0625rem] text-black/40 font-medium leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* ─── CTA Section ─── */}
-      <section className="px-6 md:px-12 lg:px-20 py-60 text-center relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-black/[0.01] rounded-full blur-[140px] pointer-events-none" />
-
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <SectionLabel>Genesis Phase</SectionLabel>
-          <h2 className="text-[clamp(2.5rem,7vw,4.5rem)] font-black tracking-[-0.04em] leading-[0.95] text-black mb-12">
-            Build for the<br />Permanent Web.
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link to="/builder" className="w-full sm:w-auto">
-              <Button
-                variant="primary"
-                size="lg"
-                className="h-16 px-12 py-8 rounded-2xl text-[0.9375rem] shadow-2xl shadow-black/10 hover:scale-105 active:scale-95 transition-all !bg-black !text-white"
-              >
-                Create First Form
-              </Button>
-            </Link>
-            <a href="https://walrus.site" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
-              <Button
-                variant="ghost"
-                size="lg"
-                className="h-16 px-12 py-8 rounded-2xl text-[0.9375rem] border border-black/[0.08] hover:bg-white hover:border-black/20 transition-all"
-              >
-                Protocol Docs
-              </Button>
-            </a>
-          </div>
+      {/* ─── Attribution Footer ─── */}
+      <section className="px-6 md:px-12 py-32 bg-[#faf9f6]">
+        <div className="max-w-[1400px] mx-auto">
+          <ProtocolAttribution />
         </div>
       </section>
 
-      {/* ─── Footer ─── */}
-      <footer className="px-6 md:px-12 lg:px-20 py-16 border-t border-black/[0.03]">
-        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="flex items-center">
-            <img 
-              src="/formseal kit/formseal_header.svg" 
-              alt="FormSeal" 
-              className="h-12 w-auto" 
-            />
-          </div>
-          <div className="flex items-center gap-10 text-[0.75rem] font-black uppercase tracking-[0.2em] text-text-muted">
-            <a href="#" className="hover:text-black transition-colors">X / Twitter</a>
-            <a href="#" className="hover:text-black transition-colors">GitHub</a>
-            <a href="#" className="hover:text-black transition-colors">Explorer</a>
-          </div>
-          <p className="text-[0.625rem] font-mono text-text-muted/40 uppercase tracking-widest">
-            Stored on Walrus Network — Zero Centralized Dependencies
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

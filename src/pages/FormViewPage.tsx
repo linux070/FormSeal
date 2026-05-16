@@ -1,172 +1,102 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { fetchFromWalrus, uploadToWalrus, getExplorerUrl } from '@/lib/walrus';
-import { sealEncrypt } from '@/lib/seal';
-import { useToastStore } from '@/stores/appStore';
-import { Button, Skeleton, Badge } from '@/components/ui';
-import { FormFieldRenderer } from '@/components/FormFieldRenderer';
-import type { FormSchema, FormIndex, FieldSubmission, FormSubmission } from '@/types';
-import { v4 as uuidv4 } from 'uuid';
 import {
   CheckCircle,
-  ArrowSquareOut,
-  Lock,
   WarningCircle,
   ArrowLeft,
+  ArrowSquareOut,
+  Lock,
+  User,
 } from '@phosphor-icons/react';
+import { useCurrentAccount } from '@mysten/dapp-kit';
+
+import { Button, Badge, Skeleton } from '@/components/ui';
+import { FormFieldRenderer } from '@/components/FormFieldRenderer';
+import { fetchFromWalrus, uploadToWalrus } from '@/lib/walrus';
+import { useToastStore, useDashboardStore } from '@/stores/appStore';
+import type { FormSchema, FormIndex } from '@/types';
 
 type PageState = 'loading' | 'ready' | 'submitting' | 'success' | 'error';
 
 export function FormViewPage() {
   const { blobId } = useParams<{ blobId: string }>();
-  const { addToast, removeToast } = useToastStore();
-
   const [pageState, setPageState] = useState<PageState>('loading');
   const [schema, setSchema] = useState<FormSchema | null>(null);
-  const [values, setValues] = useState<Record<string, string | string[] | number | null>>({});
+  const [values, setValues] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submittedBlobId, setSubmittedBlobId] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [submittedBlobId, setSubmittedBlobId] = useState<string | null>(null);
+  const { addToast, removeToast } = useToastStore();
+  const currentAccount = useCurrentAccount();
 
-  // ─── Fetch form schema ───
+  // ─── Explorer Utility ───
+  const getExplorerUrl = (id: string) => `https://explorer.walrus.xyz/#/objects/${id}`;
+
+  // ─── Fetch Schema ───
   useEffect(() => {
-    if (!blobId) return;
-    let cancelled = false;
-
-    async function load() {
+    async function fetchSchema() {
+      if (!blobId) return;
+      setPageState('loading');
       try {
-        const data = await fetchFromWalrus<FormSchema>(blobId!);
-        if (cancelled) return;
+        const data = await fetchFromWalrus<FormSchema>(blobId);
+        if (!data || !data.fields) {
+          throw new Error('Invalid form schema structure');
+        }
         setSchema(data);
-        // Initialize values
-        const initial: Record<string, string | string[] | number | null> = {};
-        data.fields.forEach((f) => {
-          if (f.type === 'checkbox_group') {
-            initial[f.id] = [];
-          } else if (f.type === 'star_rating') {
-            initial[f.id] = 0;
-          } else {
-            initial[f.id] = '';
-          }
-        });
-        setValues(initial);
         setPageState('ready');
       } catch (err) {
-        if (cancelled) return;
-        setLoadError(err instanceof Error ? err.message : 'Failed to load form');
+        console.error('Failed to fetch form:', err);
+        setLoadError(err instanceof Error ? err.message : 'Unknown error');
         setPageState('error');
       }
     }
-
-    load();
-    return () => { cancelled = true; };
+    fetchSchema();
   }, [blobId]);
 
   // ─── Validation ───
-  const validate = useCallback((): boolean => {
+  const validate = useCallback(() => {
     if (!schema) return false;
     const newErrors: Record<string, string> = {};
-
     schema.fields.forEach((field) => {
-      if (!field.required) return;
-      const val = values[field.id];
-
-      if (field.type === 'checkbox_group') {
-        if (!Array.isArray(val) || val.length === 0) {
-          newErrors[field.id] = 'Select at least one option';
-        }
-      } else if (field.type === 'star_rating') {
-        if (!val || val === 0) {
-          newErrors[field.id] = 'Please provide a rating';
-        }
-      } else if (field.type === 'url') {
-        if (!val || typeof val !== 'string' || val.trim() === '') {
-          newErrors[field.id] = 'This field is required';
-        } else {
-          try {
-            new URL(val);
-          } catch {
-            newErrors[field.id] = 'Enter a valid URL';
-          }
-        }
-      } else {
-        if (!val || (typeof val === 'string' && val.trim() === '')) {
-          newErrors[field.id] = 'This field is required';
-        }
+      if (field.required && !values[field.id]) {
+        newErrors[field.id] = 'This field is required';
       }
     });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [schema, values]);
 
-  // ─── Submit ───
+  // ─── Submission ───
   const handleSubmit = useCallback(async () => {
-    if (!schema || !blobId) return;
-    if (!validate()) return;
+    if (!validate() || !schema || !blobId) return;
 
     setPageState('submitting');
     const loadingId = addToast({
       type: 'loading',
-      title: 'Uploading to Walrus...',
-      description: schema.sensitive
-        ? 'Encrypting and storing your submission.'
-        : 'Storing your submission as a permanent blob.',
+      title: 'Packaging submission...',
+      description: 'Your data is being encrypted and staged for Walrus.',
     });
 
     try {
-      const fieldSubmissions: FieldSubmission[] = schema.fields.map((f) => ({
-        fieldId: f.id,
-        value: values[f.id],
-      }));
-
-      const submission: FormSubmission = {
-        id: uuidv4(),
+      const submission = {
         formBlobId: blobId,
-        fields: fieldSubmissions,
-        submittedAt: Date.now(),
-        encrypted: schema.sensitive,
+        values,
+        timestamp: Date.now(),
+        submittedBy: currentAccount?.address || 'anonymous',
       };
 
-      let dataToUpload: unknown = submission;
+      const subBlobId = await uploadToWalrus(submission);
 
-      // Encrypt if sensitive
-      if (schema.sensitive) {
-        const encrypted = await sealEncrypt(
-          JSON.stringify(submission),
-          schema.creatorAddress
-        );
-        dataToUpload = {
-          encrypted: true,
-          payload: encrypted,
-          formBlobId: blobId,
-          submittedAt: submission.submittedAt,
-        };
-      }
-
-      const subBlobId = await uploadToWalrus(dataToUpload);
-
-      // Try to update index blob (best-effort)
+      // Best effort: update the form's local index if possible
       try {
-        // We need to find the index blob. For demo, we create/update one
-        // In production this would be tracked onchain via a Sui object
-        const indexKey = `formseal-index-${blobId}`;
+        const indexKey = `form_index_${blobId}`;
         const existingIndexBlobId = localStorage.getItem(indexKey);
-
         let index: FormIndex;
+
         if (existingIndexBlobId) {
-          try {
-            index = await fetchFromWalrus<FormIndex>(existingIndexBlobId);
-            index.submissionBlobIds.push(subBlobId);
-            index.updatedAt = Date.now();
-          } catch {
-            index = {
-              formBlobId: blobId,
-              creatorAddress: schema.creatorAddress,
-              submissionBlobIds: [subBlobId],
-              updatedAt: Date.now(),
-            };
-          }
+          index = await fetchFromWalrus<FormIndex>(existingIndexBlobId);
+          index.submissionBlobIds.push(subBlobId);
+          index.updatedAt = Date.now();
         } else {
           index = {
             formBlobId: blobId,
@@ -178,6 +108,12 @@ export function FormViewPage() {
 
         const newIndexBlobId = await uploadToWalrus(index);
         localStorage.setItem(indexKey, newIndexBlobId);
+
+        // Keep Dashboard index state directly in sync with decentralized updates
+        useDashboardStore.getState().updateForm(blobId, {
+          indexBlobId: newIndexBlobId,
+          submissionCount: index.submissionBlobIds.length,
+        });
       } catch {
         // Index update is best-effort for the hackathon
         console.warn('Index blob update failed — non-critical');
@@ -201,7 +137,7 @@ export function FormViewPage() {
         description: err instanceof Error ? err.message : 'Unknown error',
       });
     }
-  }, [schema, blobId, values, validate, addToast, removeToast]);
+  }, [schema, blobId, values, validate, addToast, removeToast, currentAccount]);
 
   // ─── Loading State ───
   if (pageState === 'loading') {
@@ -278,7 +214,7 @@ export function FormViewPage() {
                   variant="primary"
                   size="lg"
                   icon={<ArrowSquareOut weight="light" className="w-5 h-5" />}
-                  className="w-full h-16 !rounded-2xl !bg-black !text-white shadow-xl shadow-black/10"
+                  className="w-full h-16 !rounded-lg !bg-black !text-white shadow-xl shadow-black/10"
                 >
                   Inspect Object
                 </Button>
@@ -315,7 +251,7 @@ export function FormViewPage() {
               
               {/* Form Header Area */}
               <div className="p-10 md:p-16 border-b border-black/[0.03] bg-[#faf9f6]/50">
-                <div className="flex items-center gap-3 mb-8">
+                <div className="flex flex-wrap items-center gap-3 mb-8">
                   {schema.sensitive && (
                     <Badge variant="accent" className="!bg-emerald-50 !text-emerald-600 !border-emerald-100/50">
                       <Lock weight="fill" className="w-3.5 h-3.5 mr-2" />
@@ -323,6 +259,21 @@ export function FormViewPage() {
                     </Badge>
                   )}
                   <Badge variant="default" className="!bg-black/[0.03] !text-black/40 !border-black/5">Verified Collection</Badge>
+                  {schema.creatorAddress && (
+                    <Badge variant="default" className="!bg-black/[0.02] !text-black/50 !border-black/5 font-mono">
+                      Creator: {schema.creatorAddress.slice(0, 6)}...{schema.creatorAddress.slice(-4)}
+                    </Badge>
+                  )}
+                  {currentAccount ? (
+                    <Badge variant="default" className="!bg-blue-50 !text-blue-600 !border-blue-100/50 font-mono flex items-center gap-1.5">
+                      <User weight="bold" className="w-3 h-3" />
+                      Connected: {currentAccount.address.slice(0, 6)}...{currentAccount.address.slice(-4)}
+                    </Badge>
+                  ) : (
+                    <Badge variant="default" className="!bg-amber-50 !text-amber-600 !border-amber-100/50">
+                      Wallet Disconnected
+                    </Badge>
+                  )}
                 </div>
                 
                 <h1 className="text-[2.75rem] font-bold tracking-tight text-black leading-tight mb-4">
@@ -360,7 +311,7 @@ export function FormViewPage() {
                     size="lg"
                     onClick={handleSubmit}
                     loading={pageState === 'submitting'}
-                    className="w-full h-16 !rounded-2xl text-[1.125rem] font-bold shadow-2xl shadow-black/10 transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-16 !rounded-lg text-[1.125rem] font-bold shadow-2xl shadow-black/10 transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
                     style={{
                       backgroundColor: schema.accentColor,
                     }}
@@ -379,8 +330,6 @@ export function FormViewPage() {
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );

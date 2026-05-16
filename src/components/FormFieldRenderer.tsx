@@ -97,7 +97,7 @@ export function FormFieldRenderer({
         )}
       </label>
 
-      {/* ─── Short Text ─── */}
+      {/* ΓöÇΓöÇΓöÇ Short Text ΓöÇΓöÇΓöÇ */}
       {field.type === 'short_text' && (
         <div className="relative group">
           <div className="absolute left-5 top-1/2 -translate-y-1/2 text-black/20 group-focus-within:text-black transition-colors pointer-events-none z-10">
@@ -109,12 +109,12 @@ export function FormFieldRenderer({
             placeholder={field.placeholder || 'Type your answer here...'}
             error={error}
             style={{ '--focus-border': accentColor } as any}
-            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-xl !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-md !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
           />
         </div>
       )}
 
-      {/* ─── Email Address ─── */}
+      {/* ΓöÇΓöÇΓöÇ Email Address ΓöÇΓöÇΓöÇ */}
       {field.type === 'email' && (
         <div className="relative group">
           <div className="absolute left-5 top-1/2 -translate-y-1/2 text-black/20 group-focus-within:text-black transition-colors pointer-events-none z-10">
@@ -127,25 +127,25 @@ export function FormFieldRenderer({
             placeholder={field.placeholder || 'hello@example.com'}
             error={error}
             style={{ '--focus-border': accentColor } as any}
-            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-xl !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-md !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
           />
         </div>
       )}
 
-      {/* ─── Long Text (Rich Text / TipTap) ─── */}
+      {/* ΓöÇΓöÇΓöÇ Long Text (Rich Text / TipTap) ΓöÇΓöÇΓöÇ */}
       {field.type === 'long_text' && (
         <div className="animate-fade-in group">
           <div
             style={{ '--focus-border': accentColor } as any}
             className={`
-              tiptap-editor bg-black/[0.02] border border-black/10 rounded-xl overflow-hidden
+              tiptap-editor bg-black/[0.02] border border-black/10 rounded-md overflow-hidden
               transition-all duration-300 ease-[var(--ease-out-expo)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]
               ${error ? 'border-danger ring-1 ring-danger/20' : 'focus-within:border-[var(--focus-border)]'}
             `}
           >
             {/* Toolbar */}
             {editor && (
-              <div className="flex items-center gap-1 px-3 py-2 border-b border-black/[0.03] bg-white/50 backdrop-blur-md sticky top-0 z-10 rounded-t-xl">
+              <div className="flex items-center gap-1 px-3 py-2 border-b border-black/[0.03] bg-white/50 backdrop-blur-md sticky top-0 z-10 rounded-t-md">
                 <button
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
@@ -200,7 +200,7 @@ export function FormFieldRenderer({
                 </button>
               </div>
             )}
-            <div className="rounded-b-xl overflow-hidden">
+            <div className="rounded-b-md overflow-hidden">
               <EditorContent editor={editor} />
             </div>
           </div>
@@ -208,7 +208,7 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ─── Dropdown ─── */}
+      {/* ΓöÇΓöÇΓöÇ Dropdown ΓöÇΓöÇΓöÇ */}
       {field.type === 'dropdown' && (
         <div className="relative group">
           <Dropdown
@@ -222,7 +222,7 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ─── Checkbox Group ─── */}
+      {/* ΓöÇΓöÇΓöÇ Checkbox Group ΓöÇΓöÇΓöÇ */}
       {field.type === 'checkbox_group' && (
         <div className="space-y-1">
           <div className="grid grid-cols-1 gap-2">
@@ -246,7 +246,7 @@ export function FormFieldRenderer({
                     }
                   }}
                   className={`
-                    flex items-center gap-3 cursor-pointer group px-5 py-3.5 rounded-xl 
+                    flex items-center gap-3 cursor-pointer group px-4 py-2.5 rounded-md 
                     border transition-all duration-300 select-none
                     outline-none focus-visible:ring-2 focus-visible:ring-black/20
                     ${isChecked 
@@ -257,20 +257,23 @@ export function FormFieldRenderer({
                 >
                   <div
                     className={`
-                      w-5 h-5 rounded border-2 flex items-center justify-center
+                      w-5 h-5 rounded-lg border-2 flex items-center justify-center
                       transition-all duration-300 ease-[var(--ease-spring)] flex-shrink-0
                       ${isChecked
                         ? 'border-transparent shadow-sm'
-                        : 'border-black/20 bg-black/[0.1] group-hover:border-black/30'
+                        : 'border-black/10 bg-black/[0.02] group-hover:border-black/20'
                       }
                     `}
                     style={isChecked ? { backgroundColor: accentColor || '#34d399' } : {}}
                   >
-                    {isChecked && (
-                      <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 text-white stroke-[4]" stroke="currentColor">
-                        <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
+                    <svg 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      className={`w-3.5 h-3.5 stroke-[4] transition-opacity ${isChecked ? 'text-white opacity-100' : 'text-black/[0.05] opacity-100'}`} 
+                      stroke="currentColor"
+                    >
+                      <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </div>
                   <span className={`text-[1rem] font-medium transition-colors ${isChecked ? 'text-black' : 'text-black/60'}`}>
                     {opt.label}
@@ -283,9 +286,9 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ─── Star Rating ─── */}
+      {/* ΓöÇΓöÇΓöÇ Star Rating ΓöÇΓöÇΓöÇ */}
       {field.type === 'star_rating' && (
-        <div className="bg-black/[0.03] p-6 border border-black/10 rounded-xl">
+        <div className="bg-black/[0.03] p-6 border border-black/10 rounded-md">
           <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => {
               const isFilled = typeof value === 'number' && star <= value;
@@ -302,7 +305,7 @@ export function FormFieldRenderer({
                 >
                   <Star
                     weight={isFilled ? 'fill' : 'bold'}
-                    className={`w-9 h-9 transition-colors duration-300`}
+                    className={`w-7 h-7 transition-colors duration-300`}
                     style={{ color: isFilled ? '#f59e0b' : 'rgba(0,0,0,0.05)' }}
                   />
                 </button>
@@ -313,11 +316,11 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ─── File Upload (Screenshots & Video) ─── */}
+      {/* ΓöÇΓöÇΓöÇ File Upload (Screenshots & Video) ΓöÇΓöÇΓöÇ */}
       {field.type === 'file_upload' && (
         <div className="animate-fade-in">
           {value && typeof value === 'string' && value.startsWith('data:') ? (
-            <div className="relative rounded-[var(--radius-xl)] overflow-hidden border border-border-default bg-bg-input shadow-lg group">
+            <div className="relative rounded-md overflow-hidden border border-border-default bg-bg-input shadow-lg group">
               {value.startsWith('data:image/') ? (
                 <img
                   src={value}
@@ -352,7 +355,7 @@ export function FormFieldRenderer({
                 fileInputRef.current?.click();
               }}
               className={`
-                w-full py-12 rounded-xl border-2 border-dashed
+                w-full py-12 rounded-md border-2 border-dashed
                 flex flex-col items-center justify-center gap-4
                 transition-all duration-300 ease-[var(--ease-out-expo)]
                 bg-black/[0.02] hover:bg-black/[0.04] active:scale-[0.99] group
@@ -387,7 +390,7 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ─── URL ─── */}
+      {/* ΓöÇΓöÇΓöÇ URL ΓöÇΓöÇΓöÇ */}
       {field.type === 'url' && (
         <div className="relative group">
           <div className="absolute left-5 top-1/2 -translate-y-1/2 text-black/20 group-focus-within:text-black transition-colors pointer-events-none z-10">
@@ -400,7 +403,7 @@ export function FormFieldRenderer({
             placeholder={field.placeholder || 'https://example.com'}
             error={error}
             style={{ '--focus-border': accentColor } as any}
-            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-xl !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+            className="!pl-12 !bg-black/[0.02] !border-black/10 !rounded-md !py-[1.125rem] !text-[1rem] !font-medium !text-text-primary placeholder:text-text-muted/40 focus:!border-[var(--focus-border)] focus:!ring-0 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
           />
         </div>
       )}
@@ -408,7 +411,7 @@ export function FormFieldRenderer({
   );
 }
 
-/* ─── Custom Dropdown Component ─── */
+/* ΓöÇΓöÇΓöÇ Custom Dropdown Component ΓöÇΓöÇΓöÇ */
 function Dropdown({ field, value, onChange, error, accentColor }: { 
   field: FormField; 
   value: string; 
@@ -431,7 +434,7 @@ function Dropdown({ field, value, onChange, error, accentColor }: {
         style={{ '--focus-border': accentColor } as any}
         className={`
           w-full px-5 h-[54px] bg-black/[0.03] text-text-primary
-          border rounded-xl text-[1rem] font-medium flex items-center justify-between
+          border rounded-md text-[1rem] font-medium flex items-center justify-between
           transition-all duration-300 ease-[var(--ease-out-expo)]
           ${isOpen ? 'border-[var(--focus-border)] bg-white ring-4 ring-black/5' : 'border-black/10 hover:border-black/20'}
           ${error ? 'border-danger ring-danger/10' : ''}
@@ -454,7 +457,7 @@ function Dropdown({ field, value, onChange, error, accentColor }: {
             className="fixed inset-0 z-[100]" 
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-black/[0.08] rounded-2xl shadow-2xl overflow-hidden z-[101] animate-in fade-in zoom-in-95 duration-300 origin-top">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-black/[0.08] rounded-md shadow-2xl overflow-hidden z-[101] animate-in fade-in zoom-in-95 duration-300 origin-top">
             <div className="max-h-[240px] overflow-y-auto py-2 custom-scrollbar">
               {field.options?.map((opt) => (
                 <button
