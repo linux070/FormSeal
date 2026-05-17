@@ -8,7 +8,7 @@
 
 
 <p align="center">
-  <strong>A simple drag and drop form builder to create forms, collect responses, and own your data forever.</strong>
+  <strong>a simple drag and drop form builder to create forms, collect responses, and own your data forever.</strong>
 </p>
 
 <p align="center">
