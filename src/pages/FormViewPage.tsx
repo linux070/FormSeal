@@ -13,8 +13,10 @@ import { useCurrentAccount } from '@mysten/dapp-kit';
 import { Button, Badge, Skeleton } from '@/components/ui';
 import { FormFieldRenderer } from '@/components/FormFieldRenderer';
 import { fetchFromWalrus, uploadToWalrus } from '@/lib/walrus';
+import { sealEncrypt } from '@/lib/seal';
+import { addSubmissionToIndex } from '@/lib/idb';
 import { useToastStore, useDashboardStore } from '@/stores/appStore';
-import type { FormSchema, FormIndex } from '@/types';
+import type { FormSchema } from '@/types';
 
 type PageState = 'loading' | 'ready' | 'submitting' | 'success' | 'error';
 
@@ -78,45 +80,49 @@ export function FormViewPage() {
     });
 
     try {
-      const submission = {
+      let payloadToUpload: any = {
         formBlobId: blobId,
         values,
         timestamp: Date.now(),
         submittedBy: currentAccount?.address || 'anonymous',
       };
 
-      const subBlobId = await uploadToWalrus(submission);
-
-      // Best effort: update the form's local index if possible
-      try {
-        const indexKey = `form_index_${blobId}`;
-        const existingIndexBlobId = localStorage.getItem(indexKey);
-        let index: FormIndex;
-
-        if (existingIndexBlobId) {
-          index = await fetchFromWalrus<FormIndex>(existingIndexBlobId);
-          index.submissionBlobIds.push(subBlobId);
-          index.updatedAt = Date.now();
-        } else {
-          index = {
-            formBlobId: blobId,
-            creatorAddress: schema.creatorAddress,
-            submissionBlobIds: [subBlobId],
-            updatedAt: Date.now(),
-          };
-        }
-
-        const newIndexBlobId = await uploadToWalrus(index);
-        localStorage.setItem(indexKey, newIndexBlobId);
-
-        // Keep Dashboard index state directly in sync with decentralized updates
-        useDashboardStore.getState().updateForm(blobId, {
-          indexBlobId: newIndexBlobId,
-          submissionCount: index.submissionBlobIds.length,
+      // Apply zero-trust threshold encryption if the form requires privacy
+      if (schema.sensitive) {
+        addToast({
+          type: 'loading',
+          title: 'Applying Threshold Encryption...',
+          description: 'Securing payload via Mysten Seal Network.',
         });
-      } catch {
-        // Index update is best-effort for the hackathon
-        console.warn('Index blob update failed — non-critical');
+        
+        const stringifiedPayload = JSON.stringify(payloadToUpload);
+        const encryptedCiphertext = await sealEncrypt(
+          stringifiedPayload,
+          schema.creatorAddress || '0x0000000000000000000000000000000000000000000000000000000000000000',
+          blobId
+        );
+        
+        payloadToUpload = {
+          encrypted: true,
+          payload: encryptedCiphertext,
+          submittedAt: Date.now()
+        };
+      }
+
+      const subBlobId = await uploadToWalrus(payloadToUpload);
+
+      // Aggressively cache the submission locally via IndexedDB 
+      // This bypasses Walrus propagation latency, making the Dashboard instantly aware of the submission
+      try {
+        await addSubmissionToIndex(blobId, subBlobId);
+        
+        // Keep Dashboard global state updated dynamically
+        const currentCount = useDashboardStore.getState().forms.find(f => f.formBlobId === blobId)?.submissionCount || 0;
+        useDashboardStore.getState().updateForm(blobId, {
+          submissionCount: currentCount + 1,
+        });
+      } catch (err) {
+        console.warn('Local cache update failed, but payload is safely on Walrus', err);
       }
 
       removeToast(loadingId);

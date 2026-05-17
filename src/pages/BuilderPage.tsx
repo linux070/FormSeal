@@ -39,12 +39,14 @@ import {
   CloudArrowUp,
   CircleNotch,
   VideoCamera,
+  CheckCircle,
+  ArrowSquareOut
 } from '@phosphor-icons/react';
 import { Button, Modal } from '@/components/ui';
 import { BuilderFieldCard } from '@/components/BuilderFieldCard';
 import { FormFieldRenderer } from '@/components/FormFieldRenderer';
 import { uploadToWalrus, fetchFromWalrus } from '@/lib/walrus';
-import { useDashboardStore } from '@/stores/appStore';
+import { useDashboardStore, useToastStore } from '@/stores/appStore';
 import type { FormField, FormSchema } from '@/types';
 
 /* ─── Constants ─── */
@@ -68,7 +70,10 @@ export function BuilderPage() {
   const currentAccount = useCurrentAccount();
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isPublishSuccessOpen, setIsPublishSuccessOpen] = useState(false);
+  const [publishedBlobId, setPublishedBlobId] = useState('');
   const [previewValues, setPreviewValues] = useState<Record<string, any>>({});
+  const { addToast } = useToastStore();
   const [view, setView] = useState<'selection' | 'builder'>('selection');
   const navigate = useNavigate();
   const coverFileInputRef = useRef<HTMLInputElement>(null);
@@ -142,7 +147,17 @@ export function BuilderPage() {
     try {
       const blobId = await uploadToWalrus(store.form);
       store.setPublishedBlobId(blobId);
-      alert(`Published to Walrus! Blob ID: ${blobId}`);
+      setPublishedBlobId(blobId);
+      setIsPublishSuccessOpen(true);
+      
+      // Keep dashboard store updated so it immediately appears in "Active Forms"
+      useDashboardStore.getState().addForm({
+        formBlobId: blobId,
+        indexBlobId: '',
+        title: store.form.title,
+        createdAt: Date.now(),
+        submissionCount: 0,
+      });
     } catch (error) {
       console.error('Failed to publish:', error);
       alert('Failed to publish to Walrus.');
@@ -1002,6 +1017,76 @@ export function BuilderPage() {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Publish Success Modal */}
+        <Modal
+          open={isPublishSuccessOpen}
+          onClose={() => setIsPublishSuccessOpen(false)}
+          size="md"
+          hideHeader
+        >
+          <div className="p-6 sm:p-10 flex flex-col items-center text-center">
+            <div className="w-20 h-20 rounded-[2rem] bg-[#faf9f6] border border-black/[0.03] shadow-sm flex items-center justify-center mb-8">
+              <CheckCircle weight="light" className="w-10 h-10 text-emerald-500" />
+            </div>
+            
+            <h2 className="text-[2rem] font-bold text-black tracking-tight mb-4">
+              Stream Published
+            </h2>
+            
+            <p className="text-[1rem] text-black/50 leading-relaxed mb-10 max-w-[36ch]">
+              Your form schema has been permanently sealed on the decentralized network.
+            </p>
+
+            <div className="w-full bg-[#faf9f6] border border-black/[0.04] rounded-[1.25rem] p-5 mb-10">
+              <div className="text-[0.6875rem] font-bold text-black/30 uppercase tracking-[0.15em] mb-3 text-left">
+                Public Gateway URL
+              </div>
+              <div className="flex items-center gap-3 bg-white border border-black/[0.06] rounded-[14px] p-3 shadow-sm">
+                <Globe weight="bold" className="w-5 h-5 text-black/40 shrink-0" />
+                <div className="flex-1 text-[0.875rem] font-mono text-black/70 truncate text-left select-all">
+                  {window.location.origin}/f/{publishedBlobId}
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/f/${publishedBlobId}`);
+                    addToast({
+                      type: 'success',
+                      title: 'Link Copied',
+                      description: 'Public URL copied to clipboard.',
+                    });
+                  }}
+                  className="w-10 h-10 flex items-center justify-center rounded-[10px] bg-black/[0.03] hover:bg-black/[0.06] text-black/60 transition-colors shrink-0 active:scale-95"
+                >
+                  <Copy weight="bold" className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full h-14 !rounded-xl font-bold"
+                onClick={() => setIsPublishSuccessOpen(false)}
+              >
+                Close
+              </Button>
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full h-14 !rounded-xl font-bold shadow-xl shadow-black/10 gap-2"
+                onClick={() => {
+                  setIsPublishSuccessOpen(false);
+                  window.open(`/f/${publishedBlobId}`, '_blank');
+                }}
+              >
+                View Live Form
+                <ArrowSquareOut weight="bold" className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </Modal>
