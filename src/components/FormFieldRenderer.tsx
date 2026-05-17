@@ -7,7 +7,7 @@ import type { FormField } from '@/types';
 import {
   Star,
   X,
-  FilmStrip,
+  VideoCamera,
   TextB,
   TextItalic,
   ListBullets,
@@ -18,6 +18,7 @@ import {
   Envelope,
   Globe,
   TextT,
+  FileText,
 } from '@phosphor-icons/react';
 
 interface FormFieldRendererProps {
@@ -316,8 +317,8 @@ export function FormFieldRenderer({
         </div>
       )}
 
-      {/* ΓöÇΓöÇΓöÇ File Upload (Screenshots & Video) ΓöÇΓöÇΓöÇ */}
-      {field.type === 'file_upload' && (
+      {/* ΓöÇΓöÇΓöÇ File Upload (Screenshots & Video & Any File) ΓöÇΓöÇΓöÇ */}
+      {(field.type === 'file_upload' || field.type === 'image_upload' || field.type === 'video_upload') && (
         <div className="animate-fade-in">
           {value && typeof value === 'string' && value.startsWith('data:') ? (
             <div className="relative rounded-md overflow-hidden border border-border-default bg-bg-input shadow-lg group">
@@ -330,7 +331,7 @@ export function FormFieldRenderer({
               ) : (
                 <div className="flex flex-col items-center justify-center gap-4 py-12 bg-bg-elevated">
                   <div className="w-16 h-16 rounded-full bg-accent-dim flex items-center justify-center">
-                    <FilmStrip weight="duotone" className="w-8 h-8 text-accent" />
+                    <VideoCamera weight="duotone" className="w-8 h-8 text-accent" />
                   </div>
                   <span className="text-[0.875rem] font-bold text-text-primary">
                     Video file uploaded
@@ -363,10 +364,12 @@ export function FormFieldRenderer({
               `}
             >
               <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-                {field.accept?.includes('video') ? (
-                  <FilmStrip weight="bold" className="w-6 h-6 text-black/20 group-hover:text-black transition-colors" />
-                ) : (
+                {field.type === 'video_upload' ? (
+                  <VideoCamera weight="bold" className="w-6 h-6 text-black/20 group-hover:text-black transition-colors" />
+                ) : field.type === 'image_upload' ? (
                   <ImageIcon weight="bold" className="w-6 h-6 text-black/20 group-hover:text-black transition-colors" />
+                ) : (
+                  <FileText weight="bold" className="w-6 h-6 text-black/20 group-hover:text-black transition-colors" />
                 )}
               </div>
               <div className="text-center">
@@ -374,7 +377,7 @@ export function FormFieldRenderer({
                   {field.placeholder || 'Click to upload media'}
                 </span>
                 <span className="text-[0.8125rem] font-medium text-black/30 mt-1">
-                  Supported: {field.accept === 'image/*' ? 'Images' : field.accept === 'video/*' ? 'Videos' : 'Images & Videos'}
+                  Supported: {field.type === 'image_upload' ? 'JPG, PNG, GIF, WEBP' : field.type === 'video_upload' ? 'MP4, WEBM, MOV' : 'PDF, DOC, ZIP, ANY'}
                 </span>
               </div>
             </button>

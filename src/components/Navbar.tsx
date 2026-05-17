@@ -12,6 +12,7 @@ import {
   CaretUpDown,
   Globe,
   Wallet,
+  CopySimple,
 } from '@phosphor-icons/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -37,8 +38,18 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleCopyAddress = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (activeAddress) {
+      navigator.clipboard.writeText(activeAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const handleNetworkSwitchTrigger = (targetNetwork: 'Sui Testnet' | 'Sui Mainnet') => {
     switchNetwork(targetNetwork);
@@ -134,11 +145,32 @@ export function Navbar() {
                     >
                       {/* Account Section */}
                       <div className="p-1">
-                        <div className="px-3 py-3 rounded-lg flex items-center gap-3 transition-colors hover:bg-black/[0.04] group cursor-pointer">
-                          <Check weight="bold" className="w-4 h-4 text-black/40" />
-                          <span className="text-[0.875rem] font-normal text-black/60 tracking-tight truncate">
-                            {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
-                          </span>
+                        <div 
+                          onClick={handleCopyAddress}
+                          className="px-3 py-2 rounded-lg flex items-center justify-between transition-colors hover:bg-black/[0.04] group cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <Wallet weight="bold" className="w-4 h-4 text-black/30 group-hover:text-black/50 transition-colors shrink-0" />
+                            <span className="text-[0.875rem] font-mono font-medium text-black/70 tracking-tight truncate">
+                              {activeAddress.slice(0, 6)}...{activeAddress.slice(-4)}
+                            </span>
+                          </div>
+                          <button
+                            onClick={handleCopyAddress}
+                            className={cn(
+                              "w-7 h-7 rounded-md flex items-center justify-center transition-all bg-transparent shrink-0",
+                              copied 
+                                ? "bg-emerald-50 text-emerald-600 border border-emerald-100" 
+                                : "text-black/30 hover:bg-black/[0.05] hover:text-black/60 active:scale-95"
+                            )}
+                            title="Copy Wallet Address"
+                          >
+                            {copied ? (
+                              <Check weight="bold" className="w-3.5 h-3.5" />
+                            ) : (
+                              <CopySimple weight="bold" className="w-3.5 h-3.5" />
+                            )}
+                          </button>
                         </div>
                       </div>
 

@@ -232,7 +232,7 @@ Form configurations are converted to a highly structured JSON document before be
       ]
     }
   ],
-  "creatorAddress": "0x4d6ee019649edba41d5a5ed1081fe3c86afc41fea413195dd6ecdd0f6090e54",
+  "creatorAddress": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "createdAt": 1778968940000,
   "version": 1,
   "hasCover": true,

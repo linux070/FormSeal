@@ -7,6 +7,8 @@ export type FieldType =
   | 'checkbox_group'
   | 'star_rating'
   | 'file_upload'
+  | 'image_upload'
+  | 'video_upload'
   | 'url';
 
 export interface FieldOption {

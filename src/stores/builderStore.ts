@@ -46,6 +46,8 @@ const DEFAULT_FIELD_LABELS: Record<FormField['type'], string> = {
   checkbox_group: 'Checkbox Group',
   star_rating: 'Rating',
   file_upload: 'File Upload',
+  image_upload: 'Image Upload',
+  video_upload: 'Video Upload',
   url: 'URL',
 };
 
@@ -57,6 +59,8 @@ const DEFAULT_PLACEHOLDERS: Record<FormField['type'], string> = {
   checkbox_group: '',
   star_rating: '',
   file_upload: '',
+  image_upload: '',
+  video_upload: '',
   url: 'https://example.com',
 };
 
@@ -96,7 +100,11 @@ function createField(type: FormField['type']): FormField {
   }
 
   if (type === 'file_upload') {
-    field.accept = 'image/*,video/*';
+    field.accept = '*/*';
+  } else if (type === 'image_upload') {
+    field.accept = 'image/*';
+  } else if (type === 'video_upload') {
+    field.accept = 'video/*';
   }
 
   return field;

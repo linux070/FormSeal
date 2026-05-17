@@ -12,9 +12,11 @@ import {
   CaretDown,
   CheckSquare,
   Star,
-  UploadSimple,
   Globe,
   Envelope,
+  FileText,
+  Image as ImageIcon,
+  VideoCamera,
 } from '@phosphor-icons/react';
 
 const FIELD_ICONS: Record<FormField['type'], typeof TextT> = {
@@ -24,7 +26,9 @@ const FIELD_ICONS: Record<FormField['type'], typeof TextT> = {
   dropdown: CaretDown,
   checkbox_group: CheckSquare,
   star_rating: Star,
-  file_upload: UploadSimple,
+  file_upload: FileText,
+  image_upload: ImageIcon,
+  video_upload: VideoCamera,
   url: Globe,
 };
 
@@ -35,7 +39,9 @@ const FIELD_TYPE_LABELS: Record<FormField['type'], string> = {
   dropdown: 'Dropdown Selection',
   checkbox_group: 'Checkbox Group',
   star_rating: 'Star Rating',
-  file_upload: 'Media Upload',
+  file_upload: 'File Upload',
+  image_upload: 'Image Upload',
+  video_upload: 'Video Upload',
   url: 'URL',
 };
 
@@ -87,7 +93,6 @@ export function BuilderFieldCard({
       className={`
         group/field relative transition-all duration-300
         ${isDragging ? 'opacity-50 scale-[0.98] z-50' : 'z-10'}
-        mb-4
       `}
     >
       <div className={`
@@ -208,14 +213,14 @@ export function BuilderFieldCard({
             </div>
           )}
 
-          {field.type === 'file_upload' && (
+          {(field.type === 'file_upload' || field.type === 'image_upload' || field.type === 'video_upload') && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-black/10" />
                 <span className="text-[0.6875rem] font-black text-black/20 uppercase tracking-widest">Upload Hint</span>
               </div>
               <div className="w-full py-8 bg-black/[0.02] border border-dashed border-black/10 rounded-md flex flex-col items-center justify-center gap-3 group/upload">
-                <UploadSimple weight="bold" className="w-6 h-6 text-black/20 group-hover/upload:text-black/40 transition-colors" />
+                <Icon weight="bold" className="w-6 h-6 text-black/20 group-hover/upload:text-black/40 transition-colors" />
                 <Input
                   value={field.placeholder}
                   onChange={(e) => onUpdate({ placeholder: e.target.value })}

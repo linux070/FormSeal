@@ -1,8 +1,5 @@
 import type { WalrusUploadResponse } from '@/types';
 
-const PUBLISHER = 'https://publisher.walrus-testnet.walrus.space';
-const AGGREGATOR = 'https://aggregator.walrus-testnet.walrus.space';
-
 export const WALRUS_EXPLORER_BASE = 'https://walruscan.com/testnet/blob';
 
 export interface WalrusMetadata {
@@ -19,45 +16,63 @@ export function getExplorerUrl(blobId: string): string {
   return `${WALRUS_EXPLORER_BASE}/${blobId}`;
 }
 
+const PUBLISHERS = [
+  'https://publisher.walrus-testnet.walrus.space',
+  'https://walrus-testnet-publisher.nodes.guru',
+  'https://publisher-t.walrus.blockscope.net',
+  'https://sui-walrus-testnet.bwarelabs.com/publisher'
+];
+
 export async function uploadToWalrusWithMetadata(
   data: unknown,
   options?: UploadOptions
 ): Promise<WalrusMetadata> {
   const body = typeof data === 'string' ? data : JSON.stringify(data);
-  const url = new URL(`${PUBLISHER}/v1/blobs`);
-  
-  if (options?.epochs !== undefined) {
-    url.searchParams.append('epochs', options.epochs.toString());
+  let lastError: any;
+
+  for (const publisher of PUBLISHERS) {
+    try {
+      const url = new URL(`${publisher}/v1/blobs`);
+      
+      if (options?.epochs !== undefined) {
+        url.searchParams.append('epochs', options.epochs.toString());
+      }
+
+      const response = await fetch(url.toString(), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Walrus upload failed on ${publisher} (${response.status}): ${text}`);
+      }
+
+      const result: WalrusUploadResponse = await response.json();
+
+      if (result.newlyCreated) {
+        return {
+          blobId: result.newlyCreated.blobObject.blobId,
+          suiObjectId: result.newlyCreated.blobObject.id,
+          newlyCreated: true,
+        };
+      }
+      if (result.alreadyCertified) {
+        return {
+          blobId: result.alreadyCertified.blobId,
+          newlyCreated: false,
+        };
+      }
+
+      throw new Error(`Unexpected Walrus response format from ${publisher}`);
+    } catch (err) {
+      console.warn(`[Walrus] Upload failed on ${publisher}, trying next...`, err);
+      lastError = err;
+    }
   }
 
-  const response = await fetch(url.toString(), {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body,
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Walrus upload failed (${response.status}): ${text}`);
-  }
-
-  const result: WalrusUploadResponse = await response.json();
-
-  if (result.newlyCreated) {
-    return {
-      blobId: result.newlyCreated.blobObject.blobId,
-      suiObjectId: result.newlyCreated.blobObject.id,
-      newlyCreated: true,
-    };
-  }
-  if (result.alreadyCertified) {
-    return {
-      blobId: result.alreadyCertified.blobId,
-      newlyCreated: false,
-    };
-  }
-
-  throw new Error('Unexpected Walrus response format');
+  throw new Error(`All Walrus publishers failed to upload blob. Last error: ${lastError}`);
 }
 
 export async function uploadToWalrus(
@@ -68,12 +83,37 @@ export async function uploadToWalrus(
   return metadata.blobId;
 }
 
-export async function fetchFromWalrus<T>(blobId: string): Promise<T> {
-  const response = await fetch(`${AGGREGATOR}/v1/blobs/${blobId}`);
+const AGGREGATORS = [
+  'https://aggregator.walrus-testnet.walrus.space',
+  'https://walrus-testnet-aggregator.nodes.guru',
+  'https://aggregator-t.walrus.blockscope.net',
+  'https://sui-walrus-testnet.bwarelabs.com/aggregator'
+];
 
-  if (!response.ok) {
-    throw new Error(`Walrus fetch failed (${response.status})`);
+export async function fetchFromWalrus<T>(blobId: string): Promise<T> {
+  let lastError: any;
+
+  for (const aggregator of AGGREGATORS) {
+    try {
+      const response = await fetch(`${aggregator}/v1/blobs/${blobId}`);
+
+      if (!response.ok) {
+        throw new Error(`Walrus fetch failed on ${aggregator} (${response.status})`);
+      }
+
+      // Sometimes data is returned as plain text instead of application/json
+      const textData = await response.text();
+      try {
+        return JSON.parse(textData) as T;
+      } catch (parseError) {
+        // If it's already a string but not JSON (rare for our app, but possible)
+        return textData as unknown as T;
+      }
+    } catch (err) {
+      console.warn(`[Walrus] Fetch failed on ${aggregator}, trying next...`, err);
+      lastError = err;
+    }
   }
 
-  return response.json() as Promise<T>;
+  throw new Error(`All Walrus aggregators failed to fetch blob: ${blobId}. Last error: ${lastError}`);
 }

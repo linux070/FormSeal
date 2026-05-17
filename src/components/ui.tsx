@@ -310,15 +310,19 @@ export function EmptyState({ icon, title, description, action }: {
 export function Modal({ 
   open, 
   onClose, 
-  title, 
+  title = '', 
   children,
-  size = 'md'
+  size = 'md',
+  hideHeader = false,
+  noPadding = false
 }: {
   open: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
   children: ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '6xl' | 'full';
+  hideHeader?: boolean;
+  noPadding?: boolean;
 }) {
   const sizeClasses = {
     sm: 'max-w-md',
@@ -346,26 +350,36 @@ export function Modal({
             }}
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 10 }}
-            className={cn(
-              "relative w-full bg-white rounded-md border border-black/10 shadow-2xl overflow-hidden h-fit",
-              sizeClasses[size]
-            )}
-          >
-            <div className="flex items-center justify-between px-6 py-5 border-b border-black/[0.05] bg-white">
-              <h2 className="text-lg font-bold text-text-primary tracking-tight">{title}</h2>
+          <div className={cn("relative w-full h-fit flex flex-col overflow-visible", sizeClasses[size])}>
+            {hideHeader && (
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-md bg-black/[0.04] flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+                className="fixed top-6 right-6 sm:top-8 sm:right-8 w-12 h-12 rounded-full bg-black/80 hover:bg-black backdrop-blur-xl flex items-center justify-center text-white/90 hover:text-white border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.24)] transition-all z-[210] select-none hover:scale-105 active:scale-95"
+                aria-label="Close modal"
               >
                 <X_SVG />
               </button>
-            </div>
-            <div className="px-6 py-6">{children}</div>
-          </motion.div>
+            )}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: 10 }}
+              className="relative w-full bg-white rounded-md border border-black/10 shadow-2xl overflow-hidden h-fit"
+            >
+              {!hideHeader && (
+                <div className="flex items-center justify-between px-6 py-5 border-b border-black/[0.05] bg-white">
+                  <h2 className="text-lg font-bold text-text-primary tracking-tight">{title}</h2>
+                  <button
+                    onClick={onClose}
+                    className="w-8 h-8 rounded-md bg-black/[0.04] flex items-center justify-center text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    <X_SVG />
+                  </button>
+                </div>
+              )}
+              <div className={cn(!noPadding && "px-6 py-6")}>{children}</div>
+            </motion.div>
+          </div>
         </div>
       )}
     </AnimatePresence>
