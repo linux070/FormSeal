@@ -8,7 +8,7 @@
 
 
 <p align="center">
-  <strong>Design elegant forms and collect responses with absolute privacy. Every submission is fully encrypted and stored permanently on Walrus, ensuring complete ownership of your data.</strong>
+  <strong>A simple drag and drop form builder to create forms, collect responses, and own your data forever.</strong>
 </p>
 
 <p align="center">
@@ -23,9 +23,7 @@
 
 ## 1. Product Overview
 
-**FormSeal** is a high-agency, professional form-drafting and ingestion platform designed to eliminate third-party data reliance and centralized server vulnerabilities. By combining modern front-end mechanics with decentralized protocols, FormSeal delivers **permanent form hosting** and **privacy-preserving response ingestion** through a zero-trust model.
-
-Our core mission: **Design elegant forms and collect responses with absolute privacy. Every submission is fully encrypted and stored permanently on Walrus, ensuring complete ownership of your data.**
+ **FormSeal** A simple drag and drop form builder to create forms, collect responses, and own your data forever permanently on Walrus, ensuring complete ownership of your data. FormSeal delivers **permanent form hosting** and **privacy-preserving response ingestion** through a zero-trust model.
 
 ### Key Capabilities
 - **Decentralized Permanence**: Form schemas and submissions are written directly as immutable blobs to the **Walrus Protocol** mainnet, making them immortal, censorship-resistant, and instantly accessible.

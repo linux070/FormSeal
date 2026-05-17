@@ -1,6 +1,7 @@
 import { SealClient, SessionKey } from '@mysten/seal';
 import { SuiJsonRpcClient, getJsonRpcFullnodeUrl } from '@mysten/sui/jsonRpc';
 import { Transaction } from '@mysten/sui/transactions';
+import { useWalletStore } from '@/stores/appStore';
 
 // --- Production Seal Configuration ---
 export const DEFAULT_SEAL_POLICY_PACKAGE_ID = 
@@ -12,26 +13,49 @@ const SEAL_IV_LENGTH = 12;
 // Shared clients to implement caching and reuse optimizations
 let sharedSuiClient: SuiJsonRpcClient | null = null;
 let sharedSealClient: SealClient | null = null;
+let lastInitializedNetwork: 'testnet' | 'mainnet' | null = null;
 
 export function getSuiClient(): SuiJsonRpcClient {
-  if (!sharedSuiClient) {
+  let targetNet: 'testnet' | 'mainnet' = 'testnet';
+  try {
+    const currentNetwork = useWalletStore.getState().network;
+    const isMainnet = currentNetwork.toLowerCase().includes('mainnet');
+    targetNet = isMainnet ? 'mainnet' : 'testnet';
+  } catch {
+    targetNet = 'testnet';
+  }
+
+  if (!sharedSuiClient || lastInitializedNetwork !== targetNet) {
+    lastInitializedNetwork = targetNet;
     sharedSuiClient = new SuiJsonRpcClient({ 
-      url: getJsonRpcFullnodeUrl('testnet'),
-      network: 'testnet',
+      url: getJsonRpcFullnodeUrl(targetNet),
+      network: targetNet,
     });
+    // Reset cached seal client to ensure sync
+    sharedSealClient = null;
   }
   return sharedSuiClient;
 }
 
 export function getSealClient(): SealClient {
+  let isMainnet = false;
+  try {
+    const currentNetwork = useWalletStore.getState().network;
+    isMainnet = currentNetwork.toLowerCase().includes('mainnet');
+  } catch {}
+
   if (!sharedSealClient) {
     sharedSealClient = new SealClient({
       suiClient: getSuiClient() as any,
       serverConfigs: [
         {
-          // Verified decentralized key server on Sui Testnet
-          objectId: "0xb012378c9f3799fb5b1a7083da74a4069e3c3f1c93de0b27212a5799ce1e1e98",
-          aggregatorUrl: "https://seal-aggregator-testnet.mystenlabs.com",
+          // Verified decentralized key server dynamically allocated
+          objectId: isMainnet 
+            ? "0x0000000000000000000000000000000000000000000000000000000000000000" 
+            : "0xb012378c9f3799fb5b1a7083da74a4069e3c3f1c93de0b27212a5799ce1e1e98",
+          aggregatorUrl: isMainnet 
+            ? "https://seal-aggregator-mainnet.mystenlabs.com" 
+            : "https://seal-aggregator-testnet.mystenlabs.com",
           weight: 1,
         },
       ],

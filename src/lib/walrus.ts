@@ -1,6 +1,17 @@
 import type { WalrusUploadResponse } from '@/types';
+import { useWalletStore } from '@/stores/appStore';
 
-export const WALRUS_EXPLORER_BASE = 'https://walruscan.com/testnet/blob';
+export function getExplorerBaseUrl(): string {
+  try {
+    const currentNetwork = useWalletStore.getState().network;
+    const isMainnet = currentNetwork.toLowerCase().includes('mainnet');
+    return isMainnet 
+      ? 'https://walruscan.com/mainnet/blob'
+      : 'https://walruscan.com/testnet/blob';
+  } catch {
+    return 'https://walruscan.com/testnet/blob';
+  }
+}
 
 export interface WalrusMetadata {
   blobId: string;
@@ -13,15 +24,16 @@ export interface UploadOptions {
 }
 
 export function getExplorerUrl(blobId: string): string {
-  return `${WALRUS_EXPLORER_BASE}/${blobId}`;
+  return `${getExplorerBaseUrl()}/${blobId}`;
 }
 
 const PUBLISHERS = [
+  import.meta.env.VITE_WALRUS_PUBLISHER,
   'https://publisher.walrus-testnet.walrus.space',
   'https://walrus-testnet-publisher.nodes.guru',
   'https://publisher-t.walrus.blockscope.net',
   'https://sui-walrus-testnet.bwarelabs.com/publisher'
-];
+].filter(Boolean) as string[];
 
 export async function uploadToWalrusWithMetadata(
   data: unknown,
@@ -84,11 +96,12 @@ export async function uploadToWalrus(
 }
 
 const AGGREGATORS = [
+  import.meta.env.VITE_WALRUS_AGGREGATOR,
   'https://aggregator.walrus-testnet.walrus.space',
   'https://walrus-testnet-aggregator.nodes.guru',
   'https://aggregator-t.walrus.blockscope.net',
   'https://sui-walrus-testnet.bwarelabs.com/aggregator'
-];
+].filter(Boolean) as string[];
 
 export async function fetchFromWalrus<T>(blobId: string): Promise<T> {
   let lastError: any;
