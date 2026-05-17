@@ -16,7 +16,7 @@
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19.2.5-61DAFB?style=flat&logo=react&logoColor=white" alt="React Version" /></a>
   <a href="https://typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-6.0.2-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript Version" /></a>
   <a href="https://sui.io/"><img src="https://img.shields.io/badge/Sui-Sui--Move-6FBCF0?style=flat&logo=sui&logoColor=white" alt="Sui Network" /></a>
-  <a href="https://walrus.xyz/"><img src="https://img.shields.io/badge/Storage-Walrus--Testnet-00A651?style=flat" alt="Walrus Storage" /></a>
+  <a href="https://walrus.xyz/"><img src="https://img.shields.io/badge/Storage-Walrus--Mainnet-00A651?style=flat" alt="Walrus Storage" /></a>
 </p>
 
 ---
