@@ -67,8 +67,8 @@ const renderVerifiedPayloadForPdf = (contentString: string) => {
         return `
           <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.03); padding-bottom: 6px;">
             <span style="font-family: monospace; font-size: 8px; color: #888; text-transform: uppercase; display: block; margin-bottom: 2px;">${key}</span>
-            <div style="border: 1px solid #eaeaea; border-radius: 4px; overflow: hidden; display: inline-block; background: #fafafa; padding: 2px;">
-              <img src="${valStr}" style="max-height: 45px; display: block; object-fit: contain;" />
+            <div style="border: 1px solid #eaeaea; border-radius: 4px; overflow: hidden; display: inline-block; background: #fafafa; padding: 2px; width: 48px; height: 48px;">
+              <img src="${valStr}" style="width: 48px; height: 48px; display: block; object-fit: cover;" />
             </div>
             <span style="font-size: 8px; color: #999; display: block; margin-top: 2px;">[Verified Image Payload]</span>
           </div>
@@ -296,7 +296,7 @@ export function DashboardPage() {
                 note: '',
                 content: getContentStr(),
                 blobId: subBlobId,
-                network: currentNetwork || 'Sui Testnet',
+                network: currentNetwork || 'Sui Mainnet',
                 encryptedWithSeal: isEncrypted,
               });
             } catch (blobErr) {
@@ -583,7 +583,7 @@ export function DashboardPage() {
             </tbody>
           </table>
           <div style="margin-top: 40px; font-size: 9px; color: #999; text-align: center; border-top: 1px solid #eaeaea; padding-top: 20px;">
-            FormSeal Protocol &nbsp;|&nbsp; Cryptographically secured records generated from ${currentNetwork || 'SUI Testnet'}
+            FormSeal, cryptographically secured by Sui & Seal.
           </div>
         `;
 
@@ -620,14 +620,13 @@ export function DashboardPage() {
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
         script.onload = () => {
-          // Create an invisible fixed layout wrapper to isolate from user viewport
+          // Create an invisible fixed layout wrapper to isolate from user viewport with proper dimensions
           const wrapper = document.createElement('div');
           wrapper.style.position = 'fixed';
-          wrapper.style.top = '0';
-          wrapper.style.left = '0';
-          wrapper.style.width = '0';
-          wrapper.style.height = '0';
-          wrapper.style.overflow = 'hidden';
+          wrapper.style.top = '-9999px';
+          wrapper.style.left = '-9999px';
+          wrapper.style.width = '1024px';
+          wrapper.style.height = 'auto';
           wrapper.style.zIndex = '-9999';
           wrapper.style.pointerEvents = 'none';
 
@@ -643,7 +642,7 @@ export function DashboardPage() {
             margin: 0.5,
             filename: `${pdfFilename}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
+            html2canvas: { scale: 2, useCORS: true, logging: false },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
             pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
           };
@@ -651,43 +650,57 @@ export function DashboardPage() {
           // Ensure all images are fully loaded and decoded before running html2pdf
           const images = printContainer.querySelectorAll('img');
           const imagePromises = Array.from(images).map(img => {
-            if (img.complete) return Promise.resolve();
+            if (img.complete) {
+              if (typeof img.decode === 'function') {
+                return img.decode().catch(() => {});
+              }
+              return Promise.resolve();
+            }
             return new Promise(resolve => {
-              img.onload = resolve;
-              img.onerror = resolve; // Continue even if load fails to prevent freeze
+              img.onload = () => {
+                if (typeof img.decode === 'function') {
+                  img.decode().then(resolve).catch(resolve);
+                } else {
+                  resolve(null);
+                }
+              };
+              img.onerror = () => resolve(null); // Continue even if load fails to prevent freeze
             });
           });
 
           Promise.all(imagePromises).then(() => {
-            (window as any).html2pdf().from(printContainer).set(opt).save().then(() => {
-              wrapper.remove(); // DOM Cleanup
-              setIsExporting(false);
-              setExportToast(true);
-              
-              const newEntry = {
-                fmt: exportFormat,
-                col: exportCollection,
-                records: exportData.length,
-                timestamp: Date.now()
-              };
-              setExportHistState(prev => {
-                const updated = [newEntry, ...prev];
-                localStorage.setItem('formseal-export-history', JSON.stringify(updated));
-                return updated;
+            // Give browser layout engine a tiny extra tick to settle rendering of images
+            setTimeout(() => {
+              (window as any).html2pdf().from(printContainer).set(opt).save().then(() => {
+                wrapper.remove(); // DOM Cleanup
+                setIsExporting(false);
+                setExportToast(true);
+                
+                const newEntry = {
+                  fmt: exportFormat,
+                  col: exportCollection,
+                  records: exportData.length,
+                  timestamp: Date.now()
+                };
+                setExportHistState(prev => {
+                  const updated = [newEntry, ...prev];
+                  localStorage.setItem('formseal-export-history', JSON.stringify(updated));
+                  return updated;
+                });
+                
+                const newAct = {
+                  color: 'var(--blue)',
+                  text: `PDF Report Downloaded — <strong>${exportFormat}</strong> · ${exportData.length} records`,
+                  time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                setActivity(prev => [newAct, ...prev]);
+                setTimeout(() => setExportToast(false), 4000);
+              }).catch((err: any) => {
+                wrapper.remove(); // DOM Cleanup
+                console.error('PDF Downloader failed, falling back:', err);
+                executeWindowPrintFallback();
               });
-              
-              const newAct = {
-                color: 'var(--blue)',
-                text: `PDF Report Downloaded — <strong>${exportFormat}</strong> · ${exportData.length} records`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              };
-              setActivity(prev => [newAct, ...prev]);
-              setTimeout(() => setExportToast(false), 4000);
-            }).catch((err: any) => {
-              wrapper.remove(); // DOM Cleanup
-              console.error('PDF Downloader failed, falling back:', err);
-              executeWindowPrintFallback();
-            });
+            }, 150);
           });
         };
         script.onerror = () => {
@@ -937,7 +950,7 @@ export function DashboardPage() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     <span className="text-[0.625rem] font-black text-black/30 uppercase tracking-[0.2em]">
-                      {currentNetwork || 'Sui Testnet'} Active
+                      {currentNetwork || 'Sui Mainnet'} Active
                     </span>
                   </div>
                   <h1 className="text-[2rem] font-bold tracking-tight text-black">Submissions</h1>
@@ -1976,7 +1989,7 @@ function CollectionCard({ title, count, icon, color, formBlobId, indexBlobId, ne
             
             <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/[0.03] text-[0.625rem] font-black tracking-widest uppercase text-black/40">
               <div className="w-1.5 h-1.5 rounded-full" style={{ background: `var(--${color})` }}></div>
-              <span>{network || 'SUI Testnet'}</span>
+              <span>{network || 'SUI Mainnet'}</span>
             </div>
           </div>
           

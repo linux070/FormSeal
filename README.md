@@ -8,7 +8,7 @@
 
 
 <p align="center">
-  <strong>A premium, Web3-native studio for decentralized form building, threshold-encrypted response ingestion, and permanent storage on the Walrus Protocol.</strong>
+  <strong>Design elegant forms and collect responses with absolute privacy. Every submission is fully encrypted and stored permanently on Walrus, ensuring complete ownership of your data.</strong>
 </p>
 
 <p align="center">
@@ -25,8 +25,10 @@
 
 **FormSeal** is a high-agency, professional form-drafting and ingestion platform designed to eliminate third-party data reliance and centralized server vulnerabilities. By combining modern front-end mechanics with decentralized protocols, FormSeal delivers **permanent form hosting** and **privacy-preserving response ingestion** through a zero-trust model.
 
+Our core mission: **Design elegant forms and collect responses with absolute privacy. Every submission is fully encrypted and stored permanently on Walrus, ensuring complete ownership of your data.**
+
 ### Key Capabilities
-- **Decentralized Permanence**: Form schemas and submissions are written directly as immutable blobs to the **Walrus Protocol** testnet, making them immortal, censorship-resistant, and instantly accessible.
+- **Decentralized Permanence**: Form schemas and submissions are written directly as immutable blobs to the **Walrus Protocol** mainnet, making them immortal, censorship-resistant, and instantly accessible.
 - **Threshold Cryptography**: Sensitive response fields are protected via **`@mysten/seal`**, a cryptographic framework that encrypts data on-the-fly. Ciphertext can only be reconstructed by query requests authorized through a Sui Move allowlist smart contract.
 - **Editorial Design Aesthetic**: A high-fidelity, boxed minimalist layout featuring a canvas-first editor grid, uniform 8px border geometry, precise 1px hairline elements, dynamic typography scaling, and fluid spring physics.
 - **Web3 Identity Integration**: Fully integrated with the Sui network via **`@mysten/dapp-kit`**, enabling users to manage templates, establish cryptographic session leases, sign verification transactions, and verify form ownership.
@@ -318,7 +320,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 9. Smart Contract Build & Deployment Workflow
 
-To compile and publish the Sui Move smart contract to testnet, run the following steps:
+To compile and publish the Sui Move smart contract to mainnet, run the following steps:
 
 ### 1. Compile the Smart Contract
 Ensure the code compiles without warnings:
@@ -327,7 +329,7 @@ cd move/formseal
 sui move build
 ```
 
-### 2. Deploy to Sui Testnet
+### 2. Deploy to Sui Mainnet
 Deploy the compiled Move package to the network:
 ```bash
 # Deploy move package using the active CLI profile

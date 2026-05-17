@@ -43,7 +43,7 @@ export const useWalletStore = create<WalletState>()(
     (set) => ({
       address: null,
       providerName: 'Slush Wallet Adapter',
-      network: 'Sui Testnet',
+      network: 'Sui Mainnet',
       isConnecting: false,
 
       connect: (providerOverride?: string) => {

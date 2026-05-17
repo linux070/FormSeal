@@ -259,7 +259,7 @@ export function LandingPage() {
               </h1>
 
               <p className="text-[1.125rem] md:text-[1.25rem] text-black/50 leading-relaxed max-w-[55ch] mb-10 font-medium tracking-tight">
-                Design beautiful forms and collect responses with total privacy. Every submission is encrypted and stored permanently on Walrus, giving you complete ownership of your data forever.
+                Design elegant forms and collect responses with absolute privacy. Every submission is fully encrypted and stored permanently on Walrus, ensuring complete ownership of your data.
               </p>
 
               <div className="flex flex-col items-center lg:items-start gap-8">
