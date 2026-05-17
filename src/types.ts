@@ -25,6 +25,7 @@ export interface FormField {
   required: boolean;
   options?: FieldOption[];
   accept?: string; // for file_upload: 'image/*' | 'video/*' | 'image/*,video/*'
+  description?: string;
 }
 
 /* ─── Form Schema ─── */

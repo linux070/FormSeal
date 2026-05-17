@@ -115,6 +115,33 @@ export function BuilderFieldCard({
           </div>
           
           <div className="flex items-center gap-6">
+            {/* Description Toggle */}
+            <div 
+              onClick={(e) => {
+                e.stopPropagation();
+                if (typeof field.description === 'string') {
+                  onUpdate({ description: undefined });
+                } else {
+                  onUpdate({ description: '' });
+                }
+              }}
+              className="flex items-center gap-2.5 cursor-pointer select-none group/desc"
+            >
+              <div 
+                className={`w-5 h-5 rounded-sm border-2 transition-all flex items-center justify-center
+                  ${typeof field.description === 'string' ? 'bg-black border-black shadow-sm' : 'border-black/10 bg-white group-hover/desc:border-black/20'}
+                `}
+              >
+                {typeof field.description === 'string' && (
+                  <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 text-white stroke-[4]" stroke="currentColor">
+                    <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-[0.75rem] font-bold text-black/40 group-hover/desc:text-black transition-colors">Description</span>
+            </div>
+
+            {/* Required Toggle */}
             <div 
               onClick={(e) => {
                 e.stopPropagation();
@@ -180,6 +207,28 @@ export function BuilderFieldCard({
               />
             )}
           </div>
+
+          {/* Container 2.5: Description Input */}
+          {typeof field.description === 'string' && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-black/10" />
+                <span className="text-[0.6875rem] font-black text-black/20 uppercase tracking-widest">Description Text</span>
+              </div>
+              <textarea
+                value={field.description}
+                onChange={(e) => onUpdate({ description: e.target.value })}
+                onMouseDown={(e) => e.stopPropagation()}
+                placeholder="Enter description for respondents (supports links)..."
+                className="w-full px-5 py-4 bg-white border border-black/10 rounded-md text-[0.875rem] font-medium text-black focus:border-black/30 focus:outline-none transition-all resize-none min-h-[90px] shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = '90px';
+                  target.style.height = `${target.scrollHeight}px`;
+                }}
+              />
+            </div>
+          )}
 
           {/* Placeholder Editing / Previews */}
           {(field.type === 'short_text' || field.type === 'email' || field.type === 'url') && (

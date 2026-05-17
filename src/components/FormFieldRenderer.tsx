@@ -21,6 +21,29 @@ import {
   FileText,
 } from '@phosphor-icons/react';
 
+function renderDescriptionWithLinks(text: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) => {
+    if (urlRegex.test(part)) {
+      return (
+        <a
+          key={i}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline break-all font-medium transition-colors"
+          style={{ color: '#2563eb' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 interface FormFieldRendererProps {
   field: FormField;
   value: string | string[] | number | null;
@@ -89,7 +112,7 @@ export function FormFieldRenderer({
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {/* Label */}
       <label className="flex items-center gap-2 text-[0.8125rem] font-black text-black uppercase tracking-widest opacity-40">
         {field.label || field.labelPlaceholder}
@@ -97,6 +120,13 @@ export function FormFieldRenderer({
           <span className="text-danger" aria-label="Required field">*</span>
         )}
       </label>
+
+      {/* Description */}
+      {field.description && (
+        <div className="text-[0.875rem] text-black/60 leading-relaxed font-normal whitespace-pre-wrap select-text pb-1">
+          {renderDescriptionWithLinks(field.description)}
+        </div>
+      )}
 
       {/* ΓöÇΓöÇΓöÇ Short Text ΓöÇΓöÇΓöÇ */}
       {field.type === 'short_text' && (
