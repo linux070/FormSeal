@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useBuilderStore } from '@/stores/builderStore';
 import { useCurrentAccount, ConnectModal } from '@mysten/dapp-kit';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -74,10 +74,30 @@ export function BuilderPage() {
   const [publishedBlobId, setPublishedBlobId] = useState('');
   const [previewValues, setPreviewValues] = useState<Record<string, any>>({});
   const { addToast } = useToastStore();
-  const [view, setView] = useState<'selection' | 'builder'>('selection');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [view, setView] = useState<'selection' | 'builder'>(() => {
+    if (location.state && (location.state as any).view) {
+      return (location.state as any).view;
+    }
+    return 'selection';
+  });
+
   const coverFileInputRef = useRef<HTMLInputElement>(null);
   const logoFileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (location.state && (location.state as any).view) {
+      const stateObj = location.state as any;
+      if (stateObj.reset) {
+        store.resetBuilder();
+      }
+      setView(stateObj.view);
+      // Clear state on replace to avoid sticky routing
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate, store]);
 
   const dashboardForms = useDashboardStore((s) => s.forms);
   const [formsDropdownOpen, setFormsDropdownOpen] = useState(false);

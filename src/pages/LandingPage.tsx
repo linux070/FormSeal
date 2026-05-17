@@ -264,7 +264,7 @@ export function LandingPage() {
 
               <div className="flex flex-col items-center lg:items-start gap-8">
                 <div className="flex flex-col sm:flex-row items-center gap-3">
-                  <Link to="/builder" className="w-full sm:w-auto">
+                  <Link to="/builder" state={{ view: 'builder', reset: true }} className="w-full sm:w-auto">
                     <Button
                       variant="primary"
                       className="w-full sm:w-auto px-10 h-14"

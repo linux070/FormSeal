@@ -153,7 +153,7 @@ export function TemplatesPage() {
         });
       }, 0);
     }
-    navigate('/builder');
+    navigate('/builder', { state: { view: 'builder' } });
   };
 
   return (
