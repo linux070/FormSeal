@@ -8,7 +8,7 @@
 
 
 <p align="center">
-  <strong>A simple drag and drop form builder to create forms, collect responses, and own your data forever.</strong>
+  <strong>a simple drag and drop form builder to create forms, collect responses, and own your data forever.</strong>
 </p>
 
 <p align="center">
@@ -89,19 +89,9 @@ sequenceDiagram
 
 ---
 
-## 3. High-Fidelity UI/UX & Design Tokens
 
-FormSeal is constructed on a **Premium Utilitarian Minimalist** aesthetic system. Every view complies with strict spatial parameters and responsive layouts:
 
-- **Geometric Grid Hierarchy**: Uses an 8px grid basis (`0.5rem` = `8px`, `1rem` = `16px`, `1.5rem` = `24px`).
-- **Canvas-First Layout**: Anchor points are configured on a dynamic `1fr 280px 320px` grid inside the builder workspace, placing the drafting canvas prominently to the left and consolidating inspectors and toolbars on the right to optimize structural space.
-- **Double-Bezel Borders**: Containers feature nesting hairlines (`border-black/[0.04]`) offset by deep shadows (`shadow-[0_12px_32px_-4px_rgba(0,0,0,0.04)]`) and solid `#fafafa` backdrops.
-- **Styling Uniformity**: Interactive buttons, input fields, dropdown menus, and utility icons share a strict `8px` (`rounded-xl` or `rounded-lg`) border-radius and standard heights (`h-12` or `h-14`) to ensure typographic alignment.
-- **snappy Motion**: Framework interactions use only hardware-accelerated transformation and opacity properties, resulting in zero-repaint animations. Includes comprehensive `prefers-reduced-motion` compliance.
-
----
-
-## 4. Front-End Technical Stack
+## 3. Front-End Technical Stack
 
 The client application is built as a compiled Single Page Application (SPA) using a modern utility stack:
 
@@ -122,7 +112,7 @@ The client application is built as a compiled Single Page Application (SPA) usin
 
 ---
 
-## 5. Sui Move Smart Contract Architecture
+## 4. Sui Move Smart Contract Architecture
 
 The validation gate is handled by a custom Move module deployed on the **Sui Blockchain**. It regulates access control policies for decryption requests processed by the Mysten Seal key aggregators.
 
@@ -187,7 +177,7 @@ module formseal::allowlist {
 
 ---
 
-## 6. Form Schema Technical Specification
+## 5. Form Schema Technical Specification
 
 Form configurations are converted to a highly structured JSON document before being uploaded to Walrus. This format enables standardized rendering on the submission page.
 
@@ -243,50 +233,7 @@ Form configurations are converted to a highly structured JSON document before be
 ```
 
 ---
-
-## 7. Codebase Directory Map
-
-```bash
-formseal/
-├── move/                       # Sui Move Smart Contracts
-│   └── formseal/
-│       ├── Move.toml           # Package configuration & dependencies
-│       └── sources/
-│           └── allowlist.move  # Decentralized access policy module
-├── public/                     # Static assets & brand media files
-├── src/                        # Core Application codebase
-│   ├── assets/                 # Ambient backgrounds and vectors
-│   ├── components/             # Reusable UI modules
-│   │   ├── BuilderFieldCard.tsx  # Interactive card rendering for the builder
-│   │   ├── Footer.tsx            # Clean editorial attribution footer
-│   │   ├── FormFieldRenderer.tsx # Dynamic input fields rendering
-│   │   ├── Navbar.tsx            # Navigation and dApp Kit wallet triggers
-│   │   ├── ToastContainer.tsx    # Transaction and error alert feedback
-│   │   └── ui.tsx                # Styled atomic buttons, cards, and markers
-│   ├── lib/                    # Library abstraction layer
-│   │   ├── seal.ts             # Seal threshold clients & WebCrypto fallbacks
-│   │   └── walrus.ts           # Walrus aggregator/publisher API integrations
-│   ├── pages/                  # Top-level application views
-│   │   ├── BuilderPage.tsx     # Three-pane builder workspace
-│   │   ├── DashboardPage.tsx   # Aggregated form insights & responses list
-│   │   ├── FormViewPage.tsx    # Decoupled public response collection page
-│   │   ├── LandingPage.tsx     # Hero page showcasing FormSeal sandbox
-│   │   └── TemplatesPage.tsx   # Premium pre-configured layouts
-│   ├── stores/                 # Unified reactive State stores
-│   │   ├── appStore.ts         # User interface preferences & global indexes
-│   │   └── builderStore.ts     # Active workspace editor state
-│   ├── App.tsx                 # Core application routes & entrypoint
-│   ├── index.css               # Global Tailwind CSS configurations
-│   ├── main.tsx                # Bootstrapper wrapping Query, Sui & Wallet providers
-│   └── types.ts                # Strict TypeScript types
-├── package.json                # Project dependencies & configurations
-├── tsconfig.json               # TypeScript configuration parameters
-└── vite.config.ts              # Vite configurations
-```
-
----
-
-## 8. Installation & Local Development Setup
+## 6. Installation & Local Development Setup
 
 To initialize and run a localized instance of FormSeal, execute the following commands in order:
 
@@ -342,7 +289,7 @@ export const DEFAULT_SEAL_POLICY_PACKAGE_ID = "0x<your_deployed_package_id>";
 
 ---
 
-## 10. Cryptographic Flow Detail
+## 7. Cryptographic Flow Detail
 
 FormSeal implements an advanced data-sealing workflow to protect sensitive respondent information:
 
@@ -361,7 +308,7 @@ FormSeal implements an advanced data-sealing workflow to protect sensitive respo
 
 ---
 
-## 11. Production Build & Static Compilation
+## 8. Production Build & Static Compilation
 
 To generate optimized production bundles for static hosting:
 
